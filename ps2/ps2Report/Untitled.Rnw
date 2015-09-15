@@ -1,0 +1,140 @@
+\documentclass{llncs}
+\usepackage{listings}
+\usepackage{moreverb}
+\begin{document}
+\title{Problem Set 2}
+\author{Thibault Doutre, ID : 26980469}
+\institute{STAT 243 : Introduction to Statistical Computing}
+\date{}
+\maketitle
+\bigbreak
+\noindent
+I worked on my own.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data processing using bash}
+%%%%%%%%%%%%%%%%%%%%%%
+
+
+Download file.
+\begin{lstlisting}[frame=single] 
+curl -o data.csv.bz2 "www.stat.berkeley.edu/share/paciorek
+/ss13hus.csv.bz2"
+\end{lstlisting}
+Create script with vim editor.
+\begin{lstlisting}[frame=single] 
+vim script.sh
+\end{lstlisting}
+The script contains a function with 4 parameters :
+\begin{itemize}
+\item arg1 : compressed data (.csv.bz2 format)
+\item arg2 : number of random lines to get
+\item arg3 : regular expression in order to match the columns we want
+\item arg4 : set seed, for reproducibility purposes
+
+\end{itemize}
+Algorithm :
+\begin{itemize}
+\item Set seed.
+\item Set the counter variable "var" to zero. It will indicate the position of every field we want to extract.
+\item Set the "index" string variable to NULL. This variable will used for the "cut" command. It corresponds to the positions of the fields in the data set.
+\item Set IFS to "," for convenience in the "for" loop. The machine will interpret the first line of the file as a list of strings.
+\item For every field, do :
+\begin{itemize}
+\item Increment "var".
+\item Make a regular expression in order to state if the selected field is among the ones we want. If it is not the case nothing happens for this step. Otherwise :
+\begin{itemize}
+\item Add the position of the field to the "index" variable. 
+\item Add coma. I differentiate by case when the variable "index" is empty or not in order to avoid beginning with a coma.
+\end{itemize}
+\end{itemize}
+At the end of the loop, "index" looks like "7,12,..." depending on the positions of the fields. We must notice that the list is ordered by index, but it does not matter since variables will be labeled by name.
+\item Reset IFS to a space (default value)
+\item Put the first line of the file (i.e. the header) to a new file
+\item Add 10,000 random lines by doing these steps :
+\begin{itemize}
+\item Open the csv file
+\item Select lines corresponding to the selected fields by using the index variable into the cut command
+\item Remove the first line I have already added to the file
+\item Shuffle the rows in order to have a random selection
+\item Take the first 10,000 rows and add them into the file.
+\end{itemize}
+\end{itemize}
+\noindent
+Here is the bash script.
+
+\noindent
+\begin{boxedverbatim}
+#!/bin/bash
+
+subset_data()
+{
+# arg1 = compressed data, .csv.bz2 format
+# arg2 = number of random lines to get
+# arg3 = regular expression
+# arg4 = seed
+
+RANDOM=$4
+var=0
+index=""
+IFS=","
+for i in $( bzcat $1 | head -1 )
+do
+        var=$((var+1))
+        if [[ "$i" =~ $3 ]]
+        then
+                if [ -n "$index" ]
+                then
+                        index=$index$","$var
+                else
+                        index=$var
+                fi
+        fi
+done
+IFS=" "
+bzcat $1 | head -n 1 | cut -d',' -f $index > data.subset.csv
+bzcat $1 | cut -d',' -f $index | sed '1d' | gshuf | head -$2 >>
+data.subset.csv
+}
+\end{boxedverbatim}
+\bigbreak
+\noindent
+Execute the script with the bash command. This takes approximately 2 minutes and 30 seconds to run on my laptop.
+\begin{lstlisting}[frame=single] 
+source script.sh ; subset_data data.csv.bz2 10000 "^("ST"|
+"NP"|"BDSP"|"BLD"|"RMSP"|"TEN"|"FINCP"|"FPARC"|"HHL"|"NOC"
+|"MV"|"VEH"|"YBL")$" 1
+\end{lstlisting}
+The CSV file of a random sample of 10,000 households containing the following fields for those households: "ST", "NP", "BDSP", "BLD", "RMSP", "TEN", "FINCP","FPARC", "HHL", "NOC", "MV", "VEH" and "YBL" is created.
+\section{R code}
+I import the dataset from the CSV file. It has only 10,000 rows so it is much easier for R to deal with it now.
+<<>>=
+setwd('~/Documents/stat243/ps2')
+data=as.data.frame(read.csv('./data.subset.csv'))
+attach(data)
+head(data)
+nrow(data)
+@
+\noindent
+By calculating the correlation, we can see that NP and NOC have the strongest correlation coefficient among every pairs of variables. It is confirmed when doing a cross-tabulation or plotting the data.
+
+<<>>=
+cor(na.omit(data)$NP,na.omit(data)$NOC,method="kendall")
+table(NP,NOC)
+plot(NP,NOC,main="NOC versus NP, cor ~= 73%")
+@
+\section{Time complexity}
+Once the bzfile downloaded, the bash script takes approximately 2 minutes and 30 seconds to run on my computer. I think it is more than fair. I could have been much faster by taking the first rows of the dataset with the "head" command. But in this case, I would have not taken random lines on the whole dataset.
+As for the R commands, they run in less than a second because it only reads 10,000 rows and a few columns.
+
+\section{Comparison between scan() and read.csv()}
+We obtain better results with opening a file with scan than read.csv. To get better results, we can bzip the file, open a connection to the compressed file and then use scan. However, when trying to compute these two functions to the whole compressed data file, it takes a very long time compared to the required time for the bash script to run.
+<<>>=
+setwd('~/Documents/stat243/ps2')
+con=file('./data.subset.csv')
+system.time(read.csv(con))
+con=file('./data.subset.csv')
+system.time(scan(con,what="integer",sep=","))
+close(con)
+@
+
+\end{document}
