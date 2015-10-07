@@ -1,0 +1,332 @@
+\documentclass{llncs}
+\usepackage{listings}
+\usepackage{moreverb}
+\usepackage{inconsolata}
+\pagestyle{plain}
+<<echo=FALSE>>=
+  options(width=60)
+
+  listing <- function(x, options) {
+    paste("\\begin{lstlisting}[basicstyle=\\ttfamily,breaklines=true]\n",
+      x, "\\end{lstlisting}\n", sep = "")
+  }
+  knit_hooks$set(output=listing)
+@
+
+\begin{document}
+
+\title{Problem Set 4}
+\author{Thibault Doutre, ID : 26980469}
+\institute{STAT 243 : Introduction to Statistical Computing}
+\date{}
+\maketitle
+\bigbreak
+\noindent
+I worked on my own.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Question a}
+The problem comes from the difference between global and local variables. 
+<<>>=
+set.seed(0) 
+runif(1)
+# save the seed into a file
+save(.Random.seed, file = 'tmp.Rda')
+# result
+runif(1)
+load('tmp.Rda')
+#same result than before
+runif(1)
+@
+\noindent
+Now, we debug the code by printing out the assertion of the equality between the random seed immediately after having loaded the file and the random seed of the global environment. And we see that it is false.
+<<>>=
+# Debug
+tmp <- function() { 
+  load('tmp.Rda')
+  print(identical(.Random.seed,.GlobalEnv$.Random.seed))
+  runif(1)
+} 
+tmp()
+@
+\noindent
+To correct the code, I load the random seed in the global environment.
+<<>>=
+tmp <- function() { 
+  load('tmp.Rda',envir = globalenv())
+  runif(1)
+}
+# Expected result
+tmp()
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+First, set the libraries, the global variables and the wd.
+<<>>=
+setwd("/Users/doutre/Documents/stat243/ps4")
+library(fields)
+library(rbenchmark)
+
+## Global variables
+p = 0.3
+φ = 0.5
+@
+\subsection{Question a}
+In order to compute the sum, I first create the function f(k,n,p,phi) and then apply it for all k in an other function, using lapply. We have to do the computations in the log scale because R cannot handle operations on too large numbers. Therefore, it is more appropriate to take the exponential of the log of the product of terms in the expression of f(k,n,p,phi).
+<<>>=
+log_f = function(k,n,p,φ){
+  if (k==0 || k==n)
+    return((n-k)*φ*log(1-p)+ k*φ*log(p) )
+  else
+    return(lchoose(n,k)+ 
+             (1-φ)*(k*log(k) + (n-k)*log(n-k) - n*log(n))+ 
+             φ*(k*log(p) + (n-k)*log(1-p)))
+}
+
+# using lapply
+sum_f = function(n,p,φ){
+  l = as.list(0:n)
+  fk = lapply(l,function(k) exp(log_f(k,n,p,φ)))
+  return(Reduce("+",fk))
+}
+# Example
+sum_f(200,p,φ)
+@
+\subsection{Question b}
+Now, I do the calsulation in the vectorized way. The code is a bit messy because it is optimized. But basically, here are the tips:
+\begin{itemize}
+\item Write the formula in the most factorized way
+\item Do not do twice the same computation, instead store it into a variable
+\item lgamma is better than lfactorial or lchoose
+\item crossprod is very efficient for summing a vector
+\end{itemize}
+It is important to notice that the cases k=0 and k=n are added at the last moment and the vectors used before are of length n-1.
+<<>>=
+sum_f_vect = function(n,p,φ){
+  ones=matrix(1,nrow=n-1,ncol=1)
+  v=1:(n-1)
+  n_v= -v
+  n_and_n_v=(n+n_v)
+  phi_phiBis=exp(-log(1/φ-1))
+  s_bounds = exp((lgamma(n+1)-(lgamma(v+1)+lgamma(n+n_v+1)))+
+                   (1-φ)*(v*(log(v)+log(p)*phi_phiBis) + 
+                   n_and_n_v*(log(n_and_n_v)+phi_phiBis*log(1-p)) - 
+                   n*log(n)))
+  return( exp((n*φ)*log((1-p)*p))+crossprod(s_bounds,ones))
+}
+# Example
+sum_f(200,p,φ)
+@
+\noindent
+Here is the performances:
+<<>>=
+Rprof("sum_f.txt",interval = 1e-5)
+out=sum_f_vect(1e7,p,φ)
+Rprof(NULL)
+summaryRprof("sum_f.txt")$by.self
+
+benchmark(
+  out = sum_f(200,p,φ) ,
+  out_vect = sum_f_vect(200,p,φ),
+  replications = 1000,
+  columns=c('test', 'elapsed', 'replications'))
+@
+\noindent
+We can see that the vectorized way is 100 times more efficient than the naive approach.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 3}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent
+First of all, let's set the wd, load some libraries and the data provided. I also set a global variable, n, which is the length of IDsA or IDsB (they are equal).
+<<>>=
+setwd("/Users/doutre/Documents/stat243/ps4")
+load("./mixedMember.Rda")
+library(rbenchmark)
+library(fields)
+library(plyr)
+library(Matrix)
+library(microbenchmark)
+
+## Global variables
+n=length(IDsA) #IDsB has the same length
+@
+
+\subsection{Question a}
+In one line, I compute the sum for cases A and B, and do a benchmark to see the average speed on 10 replications.
+<<>>=
+# For A
+outA = sapply(1:n,function(i) sum(wgtsA[[i]]*muA[IDsA[[i]]]))
+# For B
+outB = sapply(1:n,function(i) sum(wgtsB[[i]]*muB[IDsB[[i]]]))
+
+# speed calculation
+benchmark(
+  outA=sapply(1:n,function(i) sum(wgtsA[[i]]*muA[IDsA[[i]]])),
+  outB=sapply(1:n,function(i) sum(wgtsB[[i]]*muB[IDsB[[i]]])), 
+  replications = 10,
+  columns=c('test', 'elapsed', 'replications'))
+
+@
+
+\subsection{Question b and c}
+The basic idea of what I have implemented is based on the trace of a product of matrices. Indeed, we can easily see that the sum is the trace of the matrix product of MU and W, with MU and W well defined. Seeing things this way, it is really fast to compute the sums which are the sums over the lines of MU*W (* is the Hilbert product for matrices, just like in R). \\
+But is is important to notice that MU depends on mu, and that it is unfortunate since we want to transform the data, setting aside mu. \\
+So, this is how I proceed:
+\begin {itemize}
+\item Transform IDs data so each colum indicates the index of mu. In other words each column has ones at the indices of IDs.
+<<>>=
+# Transform function : add zeros in the middle
+transform_ID = function(l,max.len){
+  M=matrix(rep(0,max.len*length(l)),nrow=max.len)
+  for (i in 1:length(l)){
+    li=l[[i]]
+    M[li,i]=1
+  }
+  return(M)
+}
+# Example
+transform_ID(IDsB,length(muB))[,1:3]
+# Original data
+head(IDsB,3)
+@
+\item Transform the matrix of weigths such that the size of the matrix is the same as the transformed IDs and each ones in this latter is filled with corresponding weights values.
+<<>>=
+# Transform W 
+transform_W = function(l,ID_transformed){
+  M=ID_transformed
+  for (i in 1:length(l)){
+    li=l[[i]]
+    M[,i][M[,i] != 0]=li
+  }
+  return(M)
+}
+# Example
+transform_W(wgtsB,transform_ID(IDsB,length(muB)))[,1:3]
+# Original data
+head(wgtsB,3)
+@
+\item Now, we may be tempted to compute the Trace of the product of matrices issued from these two functions. But when the IDs are mapped in a special way, so we would have to correctly assign the mus to the IDs functions. But we do not want to do that, otherwise we incorpore mu in our data, which is forbidden. So the trick is to shuffle the elements of every column of the matrix W so that the product with MU would be the same than assigning different values according to the IDs.
+<<>>=
+# Do the permutation on W instead of mu
+permutation_W = function(wgtsB_transformed,ID){
+  l=wgtsB_transformed
+  for (i in 1:length(ID)){
+    l[,i][ID[[i]]]=wgtsB_transformed[,i][ID[[i]][order(ID[[i]])]]
+  }
+  return(l)
+}
+# Example
+permutation_W(transform_W(wgtsB,
+                          transform_ID(IDsB,length(muB))),IDsB)[,1:3]
+# Permutation according to
+head(IDsB,3)
+@
+
+\item Finally, I compute the Trace of the product of the two matrices. But we can do it more efficiently by multiplying the vector mu to the new permutted data. The "*" operator for a matrix and a vector does the work just fine. I could obviously do the product of the permutted data and the product of mu times the transformed IDs data, but it would have been a bit longer.
+<<>>=
+vect_sum = function(new_data, mu){ 
+  ones= matrix(1,nrow=length(mu),ncol=1)
+  product=new_data*mu
+  res=crossprod(ones,product)
+  return(res)
+}
+# Example
+vect_sum(permutation_W(
+  transform_W(
+    wgtsB,transform_ID(IDsB,length(muB))),
+  IDsB),muB)[1:3]
+@
+\item Now, I create a function which takes into argument the data provided and returns the result of the previous function, for clarity.
+<<>>=
+# Normal matrices, for B
+transform_data = function(wgts,IDs,max.len){
+  ID_transformed=transform_ID(IDs,max.len)
+  wgts_transformed=transform_W(wgts,ID_transformed)
+  new_data=permutation_W(wgts_transformed,IDs)
+  return(new_data)
+}
+@
+
+\end {itemize}
+
+\noindent
+The danger with this approach however is when the mu vector is too large. Indeed, for B it was useful since length(muB) was equal to ten, but with case A, we need another approach since length(muA) equals 1000.\\
+To deal with this problem, we have to be aware of the fact that the max of mi is small. So our transformed weight matrix has a lot of zeros in it. This leads to the use of sparse matrices. I define two new functions for sparse matrices, which can be used when mu is too large.
+<<>>=
+# Deal with sparse matrices
+transform_data_sparse = function(wgts,IDs,max.len){
+  ID_transformed=transform_ID(IDs,max.len)
+  wgts_transformed=transform_W(wgts,ID_transformed)
+  new_data=permutation_W(wgts_transformed,IDs)
+  new_data_sparse_bis=as(new_data,"sparseMatrix")
+  new_data_sparse=Matrix(new_data_sparse_bis, sparse = TRUE)
+  return(new_data_sparse)
+}
+# Deal with sparse matrices
+vect_sum_sparse = function(new_data, mu){ 
+  ones= Matrix(1,nrow=length(mu),ncol=1,sparse = TRUE)
+  product=new_data*mu
+  res=crossprod(ones,product)
+  return(res)
+}
+@
+\noindent
+These two functions work the same way as the previous ones, except for the fact that I use the library 'Matrix', which is efficient when dealing with sparse matrices.\\
+
+\subsection{Question d}
+Now, let's compute the speed test. First, I load data using sparse functions or not, depending on dealing with A or B.
+<<>>=
+new_data_B=transform_data(wgtsB,IDsB,length(muB))
+new_data_A=transform_data_sparse(wgtsA,IDsA,length(muA))
+@
+
+\noindent
+Then, I compute the efficiency of functions using three different methods, as requested:
+<<>>=
+
+# speed calculation with benchmark
+benchmark(
+  outA = sapply(1:n,function(i) sum(wgtsA[[i]]*muA[IDsA[[i]]])),
+  outB = sapply(1:n,function(i) sum(wgtsB[[i]]*muB[IDsB[[i]]])),
+  outA_vect=vect_sum_sparse(new_data_A,muA),
+  outB_vect=vect_sum(new_data_B,muB),
+  replications = 10,
+  columns=c('test', 'elapsed', 'replications'))
+
+# speed calculation with microbenchmark
+microbenchmark(
+  outA = sapply(1:n,function(i) sum(wgtsA[[i]]*muA[IDsA[[i]]])),
+  outB = sapply(1:n,function(i) sum(wgtsB[[i]]*muB[IDsB[[i]]])),
+  outA_vect=vect_sum_sparse(new_data_A,muA),
+  outB_vect=vect_sum(new_data_B,muB),
+  times = 10L
+)
+
+# speed calculation with system.time
+print("outA")
+system.time(sapply(1:n,function(i) sum(wgtsA[[i]]*muA[IDsA[[i]]])))
+print("outB")
+system.time(sapply(1:n,function(i) sum(wgtsA[[i]]*muA[IDsA[[i]]])))
+print("outA_vect2")
+system.time(vect_sum_sparse(new_data_A,muA))
+print("outB_vect2")
+system.time(vect_sum(new_data_B,muB))
+
+@
+
+\noindent
+The orders of magnitudes correspond to the values expected.
+
+
+
+
+
+
+\end{document}

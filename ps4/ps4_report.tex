@@ -1,0 +1,639 @@
+\documentclass{llncs}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{listings}
+\usepackage{moreverb}
+\usepackage{inconsolata}
+\pagestyle{plain}
+
+
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Problem Set 4}
+\author{Thibault Doutre, ID : 26980469}
+\institute{STAT 243 : Introduction to Statistical Computing}
+\date{}
+\maketitle
+\bigbreak
+\noindent
+I worked on my own.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Question a}
+The problem comes from the difference between global and local variables. 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{set.seed}\hlstd{(}\hlnum{0}\hlstd{)}
+\hlkwd{runif}\hlstd{(}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 0.8966972
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# save the seed into a file}
+\hlkwd{save}\hlstd{(.Random.seed,} \hlkwc{file} \hlstd{=} \hlstr{'tmp.Rda'}\hlstd{)}
+\hlcom{# result}
+\hlkwd{runif}\hlstd{(}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 0.2655087
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{load}\hlstd{(}\hlstr{'tmp.Rda'}\hlstd{)}
+\hlcom{#same result than before}
+\hlkwd{runif}\hlstd{(}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 0.2655087
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\noindent
+Now, we debug the code by printing out the assertion of the equality between the random seed immediately after having loaded the file and the random seed of the global environment. And we see that it is false.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Debug}
+\hlstd{tmp} \hlkwb{<-} \hlkwa{function}\hlstd{() \{}
+  \hlkwd{load}\hlstd{(}\hlstr{'tmp.Rda'}\hlstd{)}
+  \hlkwd{print}\hlstd{(}\hlkwd{identical}\hlstd{(.Random.seed,.GlobalEnv}\hlopt{$}\hlstd{.Random.seed))}
+  \hlkwd{runif}\hlstd{(}\hlnum{1}\hlstd{)}
+\hlstd{\}}
+\hlkwd{tmp}\hlstd{()}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] FALSE
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 0.3721239
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\noindent
+To correct the code, I load the random seed in the global environment.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{tmp} \hlkwb{<-} \hlkwa{function}\hlstd{() \{}
+  \hlkwd{load}\hlstd{(}\hlstr{'tmp.Rda'}\hlstd{,}\hlkwc{envir} \hlstd{=} \hlkwd{globalenv}\hlstd{())}
+  \hlkwd{runif}\hlstd{(}\hlnum{1}\hlstd{)}
+\hlstd{\}}
+\hlcom{# Expected result}
+\hlkwd{tmp}\hlstd{()}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 0.2655087
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+First, set the libraries, the global variables and the wd.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{setwd}\hlstd{(}\hlstr{"/Users/doutre/Documents/stat243/ps4"}\hlstd{)}
+\hlkwd{library}\hlstd{(fields)}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: spam\\\#\# Loading required package: grid\\\#\# Spam version 1.0-1 (2014-09-09) is loaded.\\\#\# Type 'help( Spam)' or 'demo( spam)' for a short introduction \\\#\# and overview of this package.\\\#\# Help for individual functions is also obtained by adding the\\\#\# suffix '.spam' to the function name, e.g. 'help( chol.spam)'.\\\#\# \\\#\# Attaching package: 'spam'\\\#\# \\\#\# The following objects are masked from 'package:base':\\\#\# \\\#\#\ \ \ \  backsolve, forwardsolve\\\#\# \\\#\# Loading required package: maps\\\#\# \\\#\# Attaching package: 'fields'\\\#\# \\\#\# The following object is masked from 'package:maps':\\\#\# \\\#\#\ \ \ \  ozone}}\begin{alltt}
+\hlkwd{library}\hlstd{(rbenchmark)}
+
+\hlcom{## Global variables}
+\hlstd{p} \hlkwb{=} \hlnum{0.3}
+\hlstd{φ} \hlkwb{=} \hlnum{0.5}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\subsection{Question a}
+In order to compute the sum, I first create the function f(k,n,p,phi) and then apply it for all k in an other function, using lapply. We have to do the computations in the log scale because R cannot handle operations on too large numbers. Therefore, it is more appropriate to take the exponential of the log of the product of terms in the expression of f(k,n,p,phi).
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{log_f} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{k}\hlstd{,}\hlkwc{n}\hlstd{,}\hlkwc{p}\hlstd{,}\hlkwc{φ}\hlstd{)\{}
+  \hlkwa{if} \hlstd{(k}\hlopt{==}\hlnum{0} \hlopt{||} \hlstd{k}\hlopt{==}\hlstd{n)}
+    \hlkwd{return}\hlstd{((n}\hlopt{-}\hlstd{k)}\hlopt{*}\hlstd{φ}\hlopt{*}\hlkwd{log}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{p)}\hlopt{+} \hlstd{k}\hlopt{*}\hlstd{φ}\hlopt{*}\hlkwd{log}\hlstd{(p) )}
+  \hlkwa{else}
+    \hlkwd{return}\hlstd{(}\hlkwd{lchoose}\hlstd{(n,k)}\hlopt{+}
+             \hlstd{(}\hlnum{1}\hlopt{-}\hlstd{φ)}\hlopt{*}\hlstd{(k}\hlopt{*}\hlkwd{log}\hlstd{(k)} \hlopt{+} \hlstd{(n}\hlopt{-}\hlstd{k)}\hlopt{*}\hlkwd{log}\hlstd{(n}\hlopt{-}\hlstd{k)} \hlopt{-} \hlstd{n}\hlopt{*}\hlkwd{log}\hlstd{(n))}\hlopt{+}
+            \hlstd{φ}\hlopt{*}\hlstd{(k}\hlopt{*}\hlkwd{log}\hlstd{(p)} \hlopt{+} \hlstd{(n}\hlopt{-}\hlstd{k)}\hlopt{*}\hlkwd{log}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{p)))}
+\hlstd{\}}
+
+\hlcom{# using lapply}
+\hlstd{sum_f} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{n}\hlstd{,}\hlkwc{p}\hlstd{,}\hlkwc{φ}\hlstd{)\{}
+  \hlstd{l} \hlkwb{=} \hlkwd{as.list}\hlstd{(}\hlnum{0}\hlopt{:}\hlstd{n)}
+  \hlstd{fk} \hlkwb{=} \hlkwd{lapply}\hlstd{(l,}\hlkwa{function}\hlstd{(}\hlkwc{k}\hlstd{)} \hlkwd{exp}\hlstd{(}\hlkwd{log_f}\hlstd{(k,n,p,φ)))}
+  \hlkwd{return}\hlstd{(}\hlkwd{Reduce}\hlstd{(}\hlstr{"+"}\hlstd{,fk))}
+\hlstd{\}}
+\hlcom{# Example}
+\hlkwd{sum_f}\hlstd{(}\hlnum{200}\hlstd{,p,φ)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1.416484
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\subsection{Question b}
+Now, I do the calsulation in the vectorized way. The code is a bit messy because it is optimized. But basically, here are the tips:
+\begin{itemize}
+\item Write the formula in the most factorized way
+\item Do not do twice the same computation, instead store it into a variable
+\item lgamma is better than lfactorial or lchoose
+\item crossprod is very efficient for summing a vector
+\end{itemize}
+It is important to notice that the cases k=0 and k=n are added at the last moment and the vectors used before are of length n-1.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{sum_f_vect} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{n}\hlstd{,}\hlkwc{p}\hlstd{,}\hlkwc{φ}\hlstd{)\{}
+  \hlstd{ones}\hlkwb{=}\hlkwd{matrix}\hlstd{(}\hlnum{1}\hlstd{,}\hlkwc{nrow}\hlstd{=n}\hlopt{-}\hlnum{1}\hlstd{,}\hlkwc{ncol}\hlstd{=}\hlnum{1}\hlstd{)}
+  \hlstd{v}\hlkwb{=}\hlnum{1}\hlopt{:}\hlstd{(n}\hlopt{-}\hlnum{1}\hlstd{)}
+  \hlstd{n_v}\hlkwb{=} \hlopt{-}\hlstd{v}
+  \hlstd{n_and_n_v}\hlkwb{=}\hlstd{(n}\hlopt{+}\hlstd{n_v)}
+  \hlstd{phi_phiBis}\hlkwb{=}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlkwd{log}\hlstd{(}\hlnum{1}\hlopt{/}\hlstd{φ}\hlopt{-}\hlnum{1}\hlstd{))}
+  \hlstd{s_bounds} \hlkwb{=} \hlkwd{exp}\hlstd{((}\hlkwd{lgamma}\hlstd{(n}\hlopt{+}\hlnum{1}\hlstd{)}\hlopt{-}\hlstd{(}\hlkwd{lgamma}\hlstd{(v}\hlopt{+}\hlnum{1}\hlstd{)}\hlopt{+}\hlkwd{lgamma}\hlstd{(n}\hlopt{+}\hlstd{n_v}\hlopt{+}\hlnum{1}\hlstd{)))}\hlopt{+}
+                   \hlstd{(}\hlnum{1}\hlopt{-}\hlstd{φ)}\hlopt{*}\hlstd{(v}\hlopt{*}\hlstd{(}\hlkwd{log}\hlstd{(v)}\hlopt{+}\hlkwd{log}\hlstd{(p)}\hlopt{*}\hlstd{phi_phiBis)} \hlopt{+}
+                   \hlstd{n_and_n_v}\hlopt{*}\hlstd{(}\hlkwd{log}\hlstd{(n_and_n_v)}\hlopt{+}\hlstd{phi_phiBis}\hlopt{*}\hlkwd{log}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{p))} \hlopt{-}
+                   \hlstd{n}\hlopt{*}\hlkwd{log}\hlstd{(n)))}
+  \hlkwd{return}\hlstd{(} \hlkwd{exp}\hlstd{((n}\hlopt{*}\hlstd{φ)}\hlopt{*}\hlkwd{log}\hlstd{((}\hlnum{1}\hlopt{-}\hlstd{p)}\hlopt{*}\hlstd{p))}\hlopt{+}\hlkwd{crossprod}\hlstd{(s_bounds,ones))}
+\hlstd{\}}
+\hlcom{# Example}
+\hlkwd{sum_f}\hlstd{(}\hlnum{200}\hlstd{,p,φ)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1.416484
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\noindent
+Here is the performances:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{Rprof}\hlstd{(}\hlstr{"sum_f.txt"}\hlstd{,}\hlkwc{interval} \hlstd{=} \hlnum{1e-5}\hlstd{)}
+\hlstd{out}\hlkwb{=}\hlkwd{sum_f_vect}\hlstd{(}\hlnum{1e7}\hlstd{,p,φ)}
+\hlkwd{Rprof}\hlstd{(}\hlkwa{NULL}\hlstd{)}
+\hlkwd{summaryRprof}\hlstd{(}\hlstr{"sum_f.txt"}\hlstd{)}\hlopt{$}\hlstd{by.self}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##              self.time self.pct total.time total.pct
+## "+"              0.156    43.63      0.156     43.63
+## "matrix"         0.110    30.75      0.110     30.75
+## "sum_f_vect"     0.055    15.30      0.357     99.98
+## "-"              0.019     5.41      0.019      5.41
+## ":"              0.016     4.44      0.016      4.44
+## "lgamma"         0.001     0.37      0.001      0.37
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{out} \hlstd{=} \hlkwd{sum_f}\hlstd{(}\hlnum{200}\hlstd{,p,φ) ,}
+  \hlkwc{out_vect} \hlstd{=} \hlkwd{sum_f_vect}\hlstd{(}\hlnum{200}\hlstd{,p,φ),}
+  \hlkwc{replications} \hlstd{=} \hlnum{1000}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##       test elapsed replications
+## 1      out   1.061         1000
+## 2 out_vect   0.045         1000
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\noindent
+We can see that the vectorized way is 100 times more efficient than the naive approach.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 3}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent
+First of all, let's set the wd, load some libraries and the data provided. I also set a global variable, n, which is the length of IDsA or IDsB (they are equal).
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{setwd}\hlstd{(}\hlstr{"/Users/doutre/Documents/stat243/ps4"}\hlstd{)}
+\hlkwd{load}\hlstd{(}\hlstr{"./mixedMember.Rda"}\hlstd{)}
+\hlkwd{library}\hlstd{(rbenchmark)}
+\hlkwd{library}\hlstd{(fields)}
+\hlkwd{library}\hlstd{(plyr)}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# \\\#\# Attaching package: 'plyr'\\\#\# \\\#\# The following object is masked from 'package:fields':\\\#\# \\\#\#\ \ \ \  ozone\\\#\# \\\#\# The following object is masked from 'package:maps':\\\#\# \\\#\#\ \ \ \  ozone}}\begin{alltt}
+\hlkwd{library}\hlstd{(Matrix)}
+\hlkwd{library}\hlstd{(microbenchmark)}
+
+\hlcom{## Global variables}
+\hlstd{n}\hlkwb{=}\hlkwd{length}\hlstd{(IDsA)} \hlcom{#IDsB has the same length}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Question a}
+In one line, I compute the sum for cases A and B, and do a benchmark to see the average speed on 10 replications.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# For A}
+\hlstd{outA} \hlkwb{=} \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsA[[i]]}\hlopt{*}\hlstd{muA[IDsA[[i]]]))}
+\hlcom{# For B}
+\hlstd{outB} \hlkwb{=} \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsB[[i]]}\hlopt{*}\hlstd{muB[IDsB[[i]]]))}
+
+\hlcom{# speed calculation}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{outA}\hlstd{=}\hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsA[[i]]}\hlopt{*}\hlstd{muA[IDsA[[i]]])),}
+  \hlkwc{outB}\hlstd{=}\hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsB[[i]]}\hlopt{*}\hlstd{muB[IDsB[[i]]])),}
+  \hlkwc{replications} \hlstd{=} \hlnum{10}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##   test elapsed replications
+## 1 outA   1.614           10
+## 2 outB   1.871           10
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Question b and c}
+The basic idea of what I have implemented is based on the trace of a product of matrices. Indeed, we can easily see that the sum is the trace of the matrix product of MU and W, with MU and W well defined. Seeing things this way, it is really fast to compute the sums which are the sums over the lines of MU*W (* is the Hilbert product for matrices, just like in R). \\
+But is is important to notice that MU depends on mu, and that it is unfortunate since we want to transform the data, setting aside mu. \\
+So, this is how I proceed:
+\begin {itemize}
+\item Transform IDs data so each colum indicates the index of mu. In other words each column has ones at the indices of IDs.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Transform function : add zeros in the middle}
+\hlstd{transform_ID} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{l}\hlstd{,}\hlkwc{max.len}\hlstd{)\{}
+  \hlstd{M}\hlkwb{=}\hlkwd{matrix}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{0}\hlstd{,max.len}\hlopt{*}\hlkwd{length}\hlstd{(l)),}\hlkwc{nrow}\hlstd{=max.len)}
+  \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(l))\{}
+    \hlstd{li}\hlkwb{=}\hlstd{l[[i]]}
+    \hlstd{M[li,i]}\hlkwb{=}\hlnum{1}
+  \hlstd{\}}
+  \hlkwd{return}\hlstd{(M)}
+\hlstd{\}}
+\hlcom{# Example}
+\hlkwd{transform_ID}\hlstd{(IDsB,}\hlkwd{length}\hlstd{(muB))[,}\hlnum{1}\hlopt{:}\hlnum{3}\hlstd{]}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##       [,1] [,2] [,3]
+##  [1,]    0    0    0
+##  [2,]    1    0    0
+##  [3,]    1    1    1
+##  [4,]    1    1    1
+##  [5,]    1    0    0
+##  [6,]    1    0    0
+##  [7,]    1    0    0
+##  [8,]    1    0    1
+##  [9,]    1    0    1
+## [10,]    1    1    0
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# Original data}
+\hlkwd{head}\hlstd{(IDsB,}\hlnum{3}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [[1]]
+## [1]  2  7  6  3  4  5  9  8 10
+## 
+## [[2]]
+## [1] 10  3  4
+## 
+## [[3]]
+## [1] 3 9 4 8
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\item Transform the matrix of weigths such that the size of the matrix is the same as the transformed IDs and each ones in this latter is filled with corresponding weights values.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Transform W }
+\hlstd{transform_W} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{l}\hlstd{,}\hlkwc{ID_transformed}\hlstd{)\{}
+  \hlstd{M}\hlkwb{=}\hlstd{ID_transformed}
+  \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(l))\{}
+    \hlstd{li}\hlkwb{=}\hlstd{l[[i]]}
+    \hlstd{M[,i][M[,i]} \hlopt{!=} \hlnum{0}\hlstd{]}\hlkwb{=}\hlstd{li}
+  \hlstd{\}}
+  \hlkwd{return}\hlstd{(M)}
+\hlstd{\}}
+\hlcom{# Example}
+\hlkwd{transform_W}\hlstd{(wgtsB,}\hlkwd{transform_ID}\hlstd{(IDsB,}\hlkwd{length}\hlstd{(muB)))[,}\hlnum{1}\hlopt{:}\hlnum{3}\hlstd{]}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##              [,1]       [,2]      [,3]
+##  [1,] 0.000000000 0.00000000 0.0000000
+##  [2,] 0.226200194 0.00000000 0.0000000
+##  [3,] 0.469188914 0.81031321 0.2653353
+##  [4,] 0.011783225 0.15188043 0.3655552
+##  [5,] 0.058049207 0.00000000 0.0000000
+##  [6,] 0.078030098 0.00000000 0.0000000
+##  [7,] 0.005137179 0.00000000 0.0000000
+##  [8,] 0.049490784 0.00000000 0.1903563
+##  [9,] 0.018964598 0.00000000 0.1787532
+## [10,] 0.083155801 0.03780636 0.0000000
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# Original data}
+\hlkwd{head}\hlstd{(wgtsB,}\hlnum{3}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [[1]]
+## [1] 0.226200194 0.469188914 0.011783225 0.058049207
+## [5] 0.078030098 0.005137179 0.049490784 0.018964598
+## [9] 0.083155801
+## 
+## [[2]]
+## [1] 0.81031321 0.15188043 0.03780636
+## 
+## [[3]]
+## [1] 0.2653353 0.3655552 0.1903563 0.1787532
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\item Now, we may be tempted to compute the Trace of the product of matrices issued from these two functions. But when the IDs are mapped in a special way, so we would have to correctly assign the mus to the IDs functions. But we do not want to do that, otherwise we incorpore mu in our data, which is forbidden. So the trick is to shuffle the elements of every column of the matrix W so that the product with MU would be the same than assigning different values according to the IDs.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Do the permutation on W instead of mu}
+\hlstd{permutation_W} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{wgtsB_transformed}\hlstd{,}\hlkwc{ID}\hlstd{)\{}
+  \hlstd{l}\hlkwb{=}\hlstd{wgtsB_transformed}
+  \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(ID))\{}
+    \hlstd{l[,i][ID[[i]]]}\hlkwb{=}\hlstd{wgtsB_transformed[,i][ID[[i]][}\hlkwd{order}\hlstd{(ID[[i]])]]}
+  \hlstd{\}}
+  \hlkwd{return}\hlstd{(l)}
+\hlstd{\}}
+\hlcom{# Example}
+\hlkwd{permutation_W}\hlstd{(}\hlkwd{transform_W}\hlstd{(wgtsB,}
+                          \hlkwd{transform_ID}\hlstd{(IDsB,}\hlkwd{length}\hlstd{(muB))),IDsB)[,}\hlnum{1}\hlopt{:}\hlnum{3}\hlstd{]}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##              [,1]       [,2]      [,3]
+##  [1,] 0.000000000 0.00000000 0.0000000
+##  [2,] 0.226200194 0.00000000 0.0000000
+##  [3,] 0.058049207 0.15188043 0.2653353
+##  [4,] 0.078030098 0.03780636 0.1903563
+##  [5,] 0.005137179 0.00000000 0.0000000
+##  [6,] 0.011783225 0.00000000 0.0000000
+##  [7,] 0.469188914 0.00000000 0.0000000
+##  [8,] 0.018964598 0.00000000 0.1787532
+##  [9,] 0.049490784 0.00000000 0.3655552
+## [10,] 0.083155801 0.81031321 0.0000000
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# Permutation according to}
+\hlkwd{head}\hlstd{(IDsB,}\hlnum{3}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [[1]]
+## [1]  2  7  6  3  4  5  9  8 10
+## 
+## [[2]]
+## [1] 10  3  4
+## 
+## [[3]]
+## [1] 3 9 4 8
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+\item Finally, I compute the Trace of the product of the two matrices. But we can do it more efficiently by multiplying the vector mu to the new permutted data. The "*" operator for a matrix and a vector does the work just fine. I could obviously do the product of the permutted data and the product of mu times the transformed IDs data, but it would have been a bit longer.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vect_sum} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{new_data}\hlstd{,} \hlkwc{mu}\hlstd{)\{}
+  \hlstd{ones}\hlkwb{=} \hlkwd{matrix}\hlstd{(}\hlnum{1}\hlstd{,}\hlkwc{nrow}\hlstd{=}\hlkwd{length}\hlstd{(mu),}\hlkwc{ncol}\hlstd{=}\hlnum{1}\hlstd{)}
+  \hlstd{product}\hlkwb{=}\hlstd{new_data}\hlopt{*}\hlstd{mu}
+  \hlstd{res}\hlkwb{=}\hlkwd{crossprod}\hlstd{(ones,product)}
+  \hlkwd{return}\hlstd{(res)}
+\hlstd{\}}
+\hlcom{# Example}
+\hlkwd{vect_sum}\hlstd{(}\hlkwd{permutation_W}\hlstd{(}
+  \hlkwd{transform_W}\hlstd{(}
+    \hlstd{wgtsB,}\hlkwd{transform_ID}\hlstd{(IDsB,}\hlkwd{length}\hlstd{(muB))),}
+  \hlstd{IDsB),muB)[}\hlnum{1}\hlopt{:}\hlnum{3}\hlstd{]}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] -0.4496267 -0.3697111 -0.2104093
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\item Now, I create a function which takes into argument the data provided and returns the result of the previous function, for clarity.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Normal matrices, for B}
+\hlstd{transform_data} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{wgts}\hlstd{,}\hlkwc{IDs}\hlstd{,}\hlkwc{max.len}\hlstd{)\{}
+  \hlstd{ID_transformed}\hlkwb{=}\hlkwd{transform_ID}\hlstd{(IDs,max.len)}
+  \hlstd{wgts_transformed}\hlkwb{=}\hlkwd{transform_W}\hlstd{(wgts,ID_transformed)}
+  \hlstd{new_data}\hlkwb{=}\hlkwd{permutation_W}\hlstd{(wgts_transformed,IDs)}
+  \hlkwd{return}\hlstd{(new_data)}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\end {itemize}
+
+\noindent
+The danger with this approach however is when the mu vector is too large. Indeed, for B it was useful since length(muB) was equal to ten, but with case A, we need another approach since length(muA) equals 1000.\\
+To deal with this problem, we have to be aware of the fact that the max of mi is small. So our transformed weight matrix has a lot of zeros in it. This leads to the use of sparse matrices. I define two new functions for sparse matrices, which can be used when mu is too large.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Deal with sparse matrices}
+\hlstd{transform_data_sparse} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{wgts}\hlstd{,}\hlkwc{IDs}\hlstd{,}\hlkwc{max.len}\hlstd{)\{}
+  \hlstd{ID_transformed}\hlkwb{=}\hlkwd{transform_ID}\hlstd{(IDs,max.len)}
+  \hlstd{wgts_transformed}\hlkwb{=}\hlkwd{transform_W}\hlstd{(wgts,ID_transformed)}
+  \hlstd{new_data}\hlkwb{=}\hlkwd{permutation_W}\hlstd{(wgts_transformed,IDs)}
+  \hlstd{new_data_sparse_bis}\hlkwb{=}\hlkwd{as}\hlstd{(new_data,}\hlstr{"sparseMatrix"}\hlstd{)}
+  \hlstd{new_data_sparse}\hlkwb{=}\hlkwd{Matrix}\hlstd{(new_data_sparse_bis,} \hlkwc{sparse} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+  \hlkwd{return}\hlstd{(new_data_sparse)}
+\hlstd{\}}
+\hlcom{# Deal with sparse matrices}
+\hlstd{vect_sum_sparse} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{new_data}\hlstd{,} \hlkwc{mu}\hlstd{)\{}
+  \hlstd{ones}\hlkwb{=} \hlkwd{Matrix}\hlstd{(}\hlnum{1}\hlstd{,}\hlkwc{nrow}\hlstd{=}\hlkwd{length}\hlstd{(mu),}\hlkwc{ncol}\hlstd{=}\hlnum{1}\hlstd{,}\hlkwc{sparse} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+  \hlstd{product}\hlkwb{=}\hlstd{new_data}\hlopt{*}\hlstd{mu}
+  \hlstd{res}\hlkwb{=}\hlkwd{crossprod}\hlstd{(ones,product)}
+  \hlkwd{return}\hlstd{(res)}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\noindent
+These two functions work the same way as the previous ones, except for the fact that I use the library 'Matrix', which is efficient when dealing with sparse matrices.\\
+
+\subsection{Question d}
+Now, let's compute the speed test. First, I load data using sparse functions or not, depending on dealing with A or B.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{new_data_B}\hlkwb{=}\hlkwd{transform_data}\hlstd{(wgtsB,IDsB,}\hlkwd{length}\hlstd{(muB))}
+\hlstd{new_data_A}\hlkwb{=}\hlkwd{transform_data_sparse}\hlstd{(wgtsA,IDsA,}\hlkwd{length}\hlstd{(muA))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+Then, I compute the efficiency of functions using three different methods, as requested:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# speed calculation with benchmark}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{outA} \hlstd{=} \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsA[[i]]}\hlopt{*}\hlstd{muA[IDsA[[i]]])),}
+  \hlkwc{outB} \hlstd{=} \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsB[[i]]}\hlopt{*}\hlstd{muB[IDsB[[i]]])),}
+  \hlkwc{outA_vect}\hlstd{=}\hlkwd{vect_sum_sparse}\hlstd{(new_data_A,muA),}
+  \hlkwc{outB_vect}\hlstd{=}\hlkwd{vect_sum}\hlstd{(new_data_B,muB),}
+  \hlkwc{replications} \hlstd{=} \hlnum{10}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##        test elapsed replications
+## 1      outA   1.712           10
+## 3 outA_vect   0.189           10
+## 2      outB   1.536           10
+## 4 outB_vect   0.046           10
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# speed calculation with microbenchmark}
+\hlkwd{microbenchmark}\hlstd{(}
+  \hlkwc{outA} \hlstd{=} \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsA[[i]]}\hlopt{*}\hlstd{muA[IDsA[[i]]])),}
+  \hlkwc{outB} \hlstd{=} \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsB[[i]]}\hlopt{*}\hlstd{muB[IDsB[[i]]])),}
+  \hlkwc{outA_vect}\hlstd{=}\hlkwd{vect_sum_sparse}\hlstd{(new_data_A,muA),}
+  \hlkwc{outB_vect}\hlstd{=}\hlkwd{vect_sum}\hlstd{(new_data_B,muB),}
+  \hlkwc{times} \hlstd{=} \hlnum{10L}
+\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## Unit: milliseconds
+##       expr       min         lq       mean     median
+##       outA 145.49484 147.036184 170.790286 156.725291
+##       outB 139.04818 148.011522 157.815272 151.444875
+##  outA_vect  14.36753  15.246505  18.260093  19.225541
+##  outB_vect   2.12419   2.931963   3.719074   3.382458
+##         uq        max neval
+##  162.58856 291.474797    10
+##  174.06711 188.888247    10
+##   19.98763  20.903561    10
+##    4.32909   6.838408    10
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# speed calculation with system.time}
+\hlkwd{print}\hlstd{(}\hlstr{"outA"}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] "outA"
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{system.time}\hlstd{(}\hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsA[[i]]}\hlopt{*}\hlstd{muA[IDsA[[i]]])))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    user  system elapsed 
+##   0.150   0.001   0.151
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{print}\hlstd{(}\hlstr{"outB"}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] "outB"
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{system.time}\hlstd{(}\hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,}\hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{)} \hlkwd{sum}\hlstd{(wgtsA[[i]]}\hlopt{*}\hlstd{muA[IDsA[[i]]])))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    user  system elapsed 
+##   0.141   0.002   0.144
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{print}\hlstd{(}\hlstr{"outA_vect2"}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] "outA_vect2"
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{system.time}\hlstd{(}\hlkwd{vect_sum_sparse}\hlstd{(new_data_A,muA))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    user  system elapsed 
+##   0.016   0.004   0.020
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{print}\hlstd{(}\hlstr{"outB_vect2"}\hlstd{)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] "outB_vect2"
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{system.time}\hlstd{(}\hlkwd{vect_sum}\hlstd{(new_data_B,muB))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    user  system elapsed 
+##   0.003   0.002   0.005
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+\noindent
+The orders of magnitudes correspond to the values expected.
+
+
+
+
+
+
+\end{document}
