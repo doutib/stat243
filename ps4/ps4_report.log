@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.9.4)  7 OCT 2015 14:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.9.4)  8 OCT 2015 23:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -491,16 +491,149 @@ Underfull \hbox (badness 10000) in paragraph at lines 517--519
 
 Package color Info: Redefining color shadecolor on input line 523.
 Package color Info: Redefining color shadecolor on input line 534.
-[10] [11] [12] (./ps4_report.aux)
+[10] [11]
+Package color Info: Redefining color shadecolor on input line 641.
+
+Overfull \hbox (117.87646pt too wide) in paragraph at lines 649--649
+[][]\OT1/zi4/m/it/10 df[][]=[][]\OT1/zi4/b/n/10 as.data.frame[][]\OT1/zi4/m/it/
+10 ([][]\OT1/zi4/b/n/10 matrix[][]\OT1/zi4/m/it/10 ([][]\OT1/zi4/b/n/10 c[][]\O
+T1/zi4/m/it/10 ([][]\OT1/zi4/b/n/10 rnorm[][]\OT1/zi4/m/it/10 ([][]1e6[][]),[][
+]\OT1/zi4/b/n/10 rnorm[][]\OT1/zi4/m/it/10 ([][]1e6[][],[][]3[][],[][]1[][]),[]
+[]\OT1/zi4/b/n/10 rnorm[][]\OT1/zi4/m/it/10 ([][]1e6[][],[][]1[][],[][].2[][]),
+[][]\OT1/zi4/b/n/10 rnorm[][]\OT1/zi4/m/it/10 ([][]1e6[][],[][]-[][]1[][],[][]2
+[][])),[][]ncol[][]=[][]4[][]))[][] 
+ []
+
+[12]
+Package color Info: Redefining color shadecolor on input line 658.
+ <figure/unnamed-chunk-20-1.pdf, id=48, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-20-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-20-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-20-1.pdf used on input line 669.
+(pdftex.def)             Requested size: 347.12354pt x 347.12694pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 669--670
+[][] 
+ []
+
+Package color Info: Redefining color shadecolor on input line 676.
+[13 <./figure/unnamed-chunk-20-1.pdf>]
+Underfull \vbox (badness 7451) detected at line 742
+ []
+
+
+Underfull \vbox (badness 3735) has occurred while \output is active []
+
+ [14]
+<figure/unnamed-chunk-21-1.pdf, id=62, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-21-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-21-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-21-1.pdf used on input line 743.
+(pdftex.def)             Requested size: 347.12354pt x 347.12694pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 743--744
+[][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15]
+Package color Info: Redefining color shadecolor on input line 764.
+
+[16 <./figure/unnamed-chunk-21-1.pdf>]
+<figure/unnamed-chunk-22-1.pdf, id=75, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-22-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-22-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-22-1.pdf used on input line 771.
+(pdftex.def)             Requested size: 347.12354pt x 347.12694pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 771--772
+[][] 
+ []
+
+<figure/unnamed-chunk-22-2.pdf, id=76, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-22-2.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-22-2.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-22-2.pdf used on input line 773.
+(pdftex.def)             Requested size: 347.12354pt x 347.12694pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 773--774
+[][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [17 <./figure/unnamed-chunk-22-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 780.
+
+Overfull \hbox (5.87646pt too wide) in paragraph at lines 795--795
+[][]\OT1/zi4/b/n/10 barplot[][]\OT1/zi4/m/it/10 ([][]\OT1/zi4/b/n/10 c[][]\OT1/
+zi4/m/it/10 ([][]\OT1/zi4/b/n/10 object.size[][]\OT1/zi4/m/it/10 (df[][]$[][]y)
+,[][]\OT1/zi4/b/n/10 sum[][]\OT1/zi4/m/it/10 ([][]\OT1/zi4/b/n/10 lm2[][]\OT1/z
+i4/m/it/10 (y[][]~[][].,[][]data[] []= df)[[[][]2[][]]]),beta_mem)[][]/[][]1e6[
+][],[][] 
+ []
+
+[18 <./figure/unnamed-chunk-22-2.pdf>]
+<figure/unnamed-chunk-23-1.pdf, id=95, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-23-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-23-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-23-1.pdf used on input line 800.
+(pdftex.def)             Requested size: 347.12354pt x 347.12694pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 800--801
+[][] 
+ []
+
+<figure/unnamed-chunk-23-2.pdf, id=96, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-23-2.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-23-2.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-23-2.pdf used on input line 802.
+(pdftex.def)             Requested size: 347.12354pt x 347.12694pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 802--803
+[][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [19 <./figure/unnamed-chunk-23-1.pdf>]
+Package color Info: Redefining color shadecolor on input line 808.
+
+<figure/unnamed-chunk-24-1.pdf, id=107, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-24-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-24-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-24-1.pdf used on input line 814.
+(pdftex.def)             Requested size: 347.12354pt x 347.12694pt.
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 814--815
+[][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20 <./figure/unnamed-chunk-23-2.pdf>] [21 <./figure/unnamed-chunk-24-1.pdf>]
+(./ps4_report.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 3817 strings out of 493089
- 55588 string characters out of 6134843
- 201444 words of memory out of 5000000
- 7248 multiletter control sequences out of 15000+600000
+ 3855 strings out of 493089
+ 56716 string characters out of 6134843
+ 201475 words of memory out of 5000000
+ 7277 multiletter control sequences out of 15000+600000
  6155 words of font info for 23 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  38i,6n,32p,788b,989s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -514,10 +647,10 @@ m/cmbx10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm
 cmr10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 r9.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
 0.pfb>
-Output written on ps4_report.pdf (12 pages, 109100 bytes).
+Output written on ps4_report.pdf (21 pages, 145881 bytes).
 PDF statistics:
- 75 PDF objects out of 1000 (max. 8388607)
- 53 compressed objects within 1 object stream
+ 154 PDF objects out of 1000 (max. 8388607)
+ 108 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

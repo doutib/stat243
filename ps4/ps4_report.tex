@@ -232,12 +232,12 @@ Here is the performances:
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ##              self.time self.pct total.time total.pct
-## "+"              0.156    43.63      0.156     43.63
-## "matrix"         0.110    30.75      0.110     30.75
-## "sum_f_vect"     0.055    15.30      0.357     99.98
-## "-"              0.019     5.41      0.019      5.41
-## ":"              0.016     4.44      0.016      4.44
-## "lgamma"         0.001     0.37      0.001      0.37
+## "+"              0.153    42.78      0.153     42.78
+## "matrix"         0.111    31.07      0.111     31.07
+## "sum_f_vect"     0.055    15.42      0.358     99.98
+## ":"              0.019     5.31      0.019      5.31
+## "-"              0.017     4.73      0.017      4.73
+## "lgamma"         0.002     0.58      0.002      0.58
 \end{lstlisting}
 \begin{alltt}
 \hlkwd{benchmark}\hlstd{(}
@@ -248,8 +248,8 @@ Here is the performances:
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ##       test elapsed replications
-## 1      out   1.061         1000
-## 2 out_vect   0.045         1000
+## 1      out   1.060         1000
+## 2 out_vect   0.052         1000
 \end{lstlisting}
 \end{kframe}
 \end{knitrout}
@@ -302,8 +302,8 @@ In one line, I compute the sum for cases A and B, and do a benchmark to see the 
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ##   test elapsed replications
-## 1 outA   1.614           10
-## 2 outB   1.871           10
+## 1 outA   1.635           10
+## 2 outB   1.710           10
 \end{lstlisting}
 \end{kframe}
 \end{knitrout}
@@ -544,10 +544,10 @@ Then, I compute the efficiency of functions using three different methods, as re
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ##        test elapsed replications
-## 1      outA   1.712           10
-## 3 outA_vect   0.189           10
-## 2      outB   1.536           10
-## 4 outB_vect   0.046           10
+## 1      outA   1.526           10
+## 3 outA_vect   0.200           10
+## 2      outB   1.552           10
+## 4 outB_vect   0.052           10
 \end{lstlisting}
 \begin{alltt}
 \hlcom{# speed calculation with microbenchmark}
@@ -561,16 +561,16 @@ Then, I compute the efficiency of functions using three different methods, as re
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ## Unit: milliseconds
-##       expr       min         lq       mean     median
-##       outA 145.49484 147.036184 170.790286 156.725291
-##       outB 139.04818 148.011522 157.815272 151.444875
-##  outA_vect  14.36753  15.246505  18.260093  19.225541
-##  outB_vect   2.12419   2.931963   3.719074   3.382458
-##         uq        max neval
-##  162.58856 291.474797    10
-##  174.06711 188.888247    10
-##   19.98763  20.903561    10
-##    4.32909   6.838408    10
+##       expr        min        lq       mean    median
+##       outA 142.379152 152.41818 173.082492 157.81374
+##       outB 143.195879 152.98294 164.324361 161.99015
+##  outA_vect  14.175109  14.99821  18.394205  19.54872
+##  outB_vect   2.003604   2.92446   3.691835   3.32164
+##          uq        max neval
+##  172.954434 290.484015    10
+##  173.433724 198.933045    10
+##   19.656025  21.864156    10
+##    4.761664   6.120072    10
 \end{lstlisting}
 \begin{alltt}
 \hlcom{# speed calculation with system.time}
@@ -584,7 +584,7 @@ Then, I compute the efficiency of functions using three different methods, as re
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ##    user  system elapsed 
-##   0.150   0.001   0.151
+##   0.152   0.000   0.152
 \end{lstlisting}
 \begin{alltt}
 \hlkwd{print}\hlstd{(}\hlstr{"outB"}\hlstd{)}
@@ -597,7 +597,7 @@ Then, I compute the efficiency of functions using three different methods, as re
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ##    user  system elapsed 
-##   0.141   0.002   0.144
+##   0.145   0.003   0.146
 \end{lstlisting}
 \begin{alltt}
 \hlkwd{print}\hlstd{(}\hlstr{"outA_vect2"}\hlstd{)}
@@ -610,7 +610,7 @@ Then, I compute the efficiency of functions using three different methods, as re
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ##    user  system elapsed 
-##   0.016   0.004   0.020
+##   0.017   0.004   0.022
 \end{lstlisting}
 \begin{alltt}
 \hlkwd{print}\hlstd{(}\hlstr{"outB_vect2"}\hlstd{)}
@@ -623,7 +623,7 @@ Then, I compute the efficiency of functions using three different methods, as re
 \end{alltt}
 \begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
 ##    user  system elapsed 
-##   0.003   0.002   0.005
+##   0.003   0.001   0.005
 \end{lstlisting}
 \end{kframe}
 \end{knitrout}
@@ -632,8 +632,199 @@ Then, I compute the efficiency of functions using three different methods, as re
 The orders of magnitudes correspond to the values expected.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\noindent
+First of all let's load all the objects we are interested in.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(pryr)}
 
+\hlcom{# Clear objects from workspace}
+\hlkwd{rm}\hlstd{(}\hlkwc{list}\hlstd{=}\hlkwd{ls}\hlstd{(}\hlkwc{all}\hlstd{=}\hlnum{TRUE}\hlstd{))}
 
+\hlcom{# Store data}
+\hlstd{df}\hlkwb{=}\hlkwd{as.data.frame}\hlstd{(}\hlkwd{matrix}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{1e6}\hlstd{),}\hlkwd{rnorm}\hlstd{(}\hlnum{1e6}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{),}\hlkwd{rnorm}\hlstd{(}\hlnum{1e6}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{.2}\hlstd{),}\hlkwd{rnorm}\hlstd{(}\hlnum{1e6}\hlstd{,}\hlopt{-}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{)),}\hlkwc{ncol}\hlstd{=}\hlnum{4}\hlstd{))}
+\hlkwd{names}\hlstd{(df)}\hlkwb{=}\hlkwd{c}\hlstd{(}\hlstr{"y"}\hlstd{,}\hlstr{"x1"}\hlstd{,}\hlstr{"x2"}\hlstd{,}\hlstr{"x3"}\hlstd{)}
+\hlstd{lm.fit}\hlkwb{=}\hlkwd{lm}\hlstd{(y}\hlopt{~}\hlstd{.,}\hlkwc{data} \hlstd{= df)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\noindent
+Here is the memory use for the object lm.fit.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## a)}
+\hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+\hlstd{lm_size}\hlkwb{=}\hlkwd{object.size}\hlstd{(lm.fit)}
+\hlkwd{barplot}\hlstd{(}\hlkwd{c}\hlstd{(t_m,lm_size)}\hlopt{/}\hlnum{1e6}\hlstd{,}
+        \hlkwc{names.arg}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{"Total"}\hlstd{,}\hlstr{"Lm"}\hlstd{),}
+        \hlkwc{ylab}\hlstd{=}\hlstr{"MB"}\hlstd{,}
+        \hlkwc{main}\hlstd{=}\hlstr{"Memory management"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-20-1} 
 
+\end{knitrout}
+
+\noindent
+Then, I write the lm function again for our specific problem; basically I remove useless statements. Then, by storing the memory use of each operation, I plot the result with barplot.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Size of observations}
+\hlstd{obs_size}\hlkwb{=}\hlkwd{object.size}\hlstd{(df}\hlopt{$}\hlstd{y)}\hlopt{/}\hlnum{1e6}
+\hlcom{# Lm function for our special case}
+\hlstd{lm2} \hlkwb{=} \hlkwa{function} \hlstd{(}\hlkwc{formula}\hlstd{,} \hlkwc{data}\hlstd{)}
+\hlstd{\{}
+  \hlcom{# Create a new variable which store values of memory used}
+  \hlstd{mem_management}\hlkwb{=}\hlkwd{rep}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{9}\hlstd{)}
+  \hlstd{mem_names}\hlkwb{=}\hlkwd{c}\hlstd{(}\hlstr{"cl"}\hlstd{,}\hlstr{"mf"}\hlstd{,}\hlstr{"m"}\hlstd{,}\hlstr{"mf2"}\hlstd{,}\hlstr{"mf3"}\hlstd{,}\hlstr{"mf4"}\hlstd{,}\hlstr{"mt"}\hlstd{,}\hlstr{"y"}\hlstd{,}\hlstr{"x"}\hlstd{)}
+  \hlcom{# Total memory used before storing the variables}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# Local variables}
+  \hlcom{# 1 : cl}
+  \hlstd{cl} \hlkwb{<-} \hlkwd{match.call}\hlstd{()}
+  \hlstd{mem_management[}\hlnum{1}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# 2 : mf1}
+  \hlstd{mf} \hlkwb{<-} \hlkwd{match.call}\hlstd{(}\hlkwc{expand.dots} \hlstd{=} \hlnum{FALSE}\hlstd{)}
+  \hlstd{mem_management[}\hlnum{2}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# 3 : m}
+  \hlstd{m} \hlkwb{<-} \hlkwd{match}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"formula"}\hlstd{,} \hlstr{"data"}\hlstd{),} \hlkwd{names}\hlstd{(mf),} \hlnum{0L}\hlstd{)}
+  \hlstd{mem_management[}\hlnum{3}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# 4 : mf2}
+  \hlstd{mf} \hlkwb{<-} \hlstd{mf[}\hlkwd{c}\hlstd{(}\hlnum{1L}\hlstd{, m)]}
+  \hlstd{mem_management[}\hlnum{4}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# 5 : mf3}
+  \hlstd{mf[[}\hlnum{1L}\hlstd{]]} \hlkwb{<-} \hlkwd{quote}\hlstd{(stats}\hlopt{::}\hlstd{model.frame)}
+  \hlstd{mem_management[}\hlnum{5}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# 6 : mf4}
+  \hlstd{mf} \hlkwb{<-} \hlkwd{eval}\hlstd{(mf,} \hlkwd{parent.frame}\hlstd{())}
+  \hlstd{mem_management[}\hlnum{6}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# 7 : mt}
+  \hlstd{mt} \hlkwb{<-} \hlkwd{attr}\hlstd{(mf,} \hlstr{"terms"}\hlstd{)}
+  \hlstd{mem_management[}\hlnum{7}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# 8 : y}
+  \hlstd{y} \hlkwb{<-} \hlkwd{model.response}\hlstd{(mf,} \hlstr{"numeric"}\hlstd{)}
+  \hlstd{mem_management[}\hlnum{8}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# 9 : x}
+  \hlstd{x} \hlkwb{<-} \hlkwd{model.matrix}\hlstd{(mt, mf)}
+  \hlstd{mem_management[}\hlnum{9}\hlstd{]}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+  \hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+  \hlcom{# Plot memory management}
+  \hlkwd{barplot}\hlstd{(mem_management}\hlopt{/}\hlnum{1e6}\hlstd{,}\hlkwc{names.arg} \hlstd{= mem_names,}\hlkwc{ylab}\hlstd{=}\hlstr{"MB"}\hlstd{,}
+          \hlkwc{main}\hlstd{=}\hlstr{"Memory management"}\hlstd{)}
+  \hlkwd{lines}\hlstd{(}\hlkwc{x}\hlstd{=}\hlnum{0}\hlopt{:}\hlnum{11}\hlstd{,}\hlkwc{y}\hlstd{=}\hlkwd{rep}\hlstd{(obs_size,}\hlnum{12}\hlstd{))}
+  \hlkwd{text}\hlstd{(}\hlkwc{x}\hlstd{=}\hlnum{3}\hlstd{,}\hlkwc{y}\hlstd{=obs_size}\hlopt{+}\hlnum{.5} \hlstd{,}\hlkwc{labels} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"size of observations"}\hlstd{))}
+
+  \hlcom{# lm.fit call}
+  \hlstd{z} \hlkwb{<-} \hlkwd{lm.fit}\hlstd{(x, y,} \hlkwc{singular.ok} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+  \hlkwd{class}\hlstd{(z)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwa{if} \hlstd{(}\hlkwd{is.matrix}\hlstd{(y))} \hlstr{"mlm"}\hlstd{,} \hlstr{"lm"}\hlstd{)}
+  \hlstd{z}\hlopt{$}\hlstd{xlevels} \hlkwb{<-} \hlkwd{.getXlevels}\hlstd{(mt, mf)}
+  \hlstd{z}\hlopt{$}\hlstd{call} \hlkwb{<-} \hlstd{cl}
+  \hlstd{z}\hlopt{$}\hlstd{terms} \hlkwb{<-} \hlstd{mt}
+  \hlstd{z}\hlopt{$}\hlstd{model} \hlkwb{<-} \hlstd{mf}
+  \hlkwd{list}\hlstd{(z,mem_management)}
+\hlstd{\}}
+\hlkwd{lm2}\hlstd{(y}\hlopt{~}\hlstd{.,}\hlkwc{data} \hlstd{= df)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-21-1} 
+\begin{kframe}\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [[1]]
+## 
+## Call:
+## lm2(formula = y ~ ., data = df)
+## 
+## Coefficients:
+## (Intercept)           x1           x2           x3  
+##   0.0021041    0.0011744   -0.0048279   -0.0002561  
+## 
+## 
+## [[2]]
+## [1]     -416      392      232        0      112 32003112
+## [7]      112 16000280 40000688
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\noindent
+If figure out how much total memory is in use in lm() at the point at which lm.fit() is called and I compare the additional memory use to the memory used in the global environment to store the observations and covariates. The latter is given by the sum of the second attribute of lm2 function.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{barplot}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{object.size}\hlstd{(df}\hlopt{$}\hlstd{y),}\hlkwd{sum}\hlstd{(}\hlkwd{lm2}\hlstd{(y}\hlopt{~}\hlstd{.,}\hlkwc{data} \hlstd{= df)[[}\hlnum{2}\hlstd{]]))}\hlopt{/}\hlnum{1e6}\hlstd{,}
+        \hlkwc{names.arg} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"Variables"}\hlstd{,}\hlstr{"Total before lm.fit()"}\hlstd{),}
+        \hlkwc{ylab}\hlstd{=}\hlstr{"MB"}\hlstd{,}\hlkwc{main}\hlstd{=}\hlstr{"Memory management"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-22-1} 
+
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-22-2} 
+
+\end{knitrout}
+\noindent
+An explanation of why some of the vectors and matrices are larger than 8 bytes per number, is that extra memory is used to store compute other variables such as the residuals and the fitted values. \\
+To optimize memory used, we can directly compute the result of the least square estimate:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{x}\hlkwb{=}\hlkwd{as.matrix}\hlstd{(df[,}\hlnum{2}\hlopt{:}\hlnum{4}\hlstd{])}
+\hlstd{y}\hlkwb{=}\hlkwd{as.matrix}\hlstd{(df[,}\hlnum{1}\hlstd{])}
+\hlstd{t_m}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}
+\hlstd{Beta} \hlkwb{=} \hlkwd{solve}\hlstd{(}\hlkwd{crossprod}\hlstd{(x,x),} \hlkwd{crossprod}\hlstd{(x,y))}
+\hlstd{beta_mem}\hlkwb{=}\hlkwd{mem_used}\hlstd{()}\hlopt{-}\hlstd{t_m}
+\hlcom{# New value}
+\hlstd{beta_mem}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## 16.3 kB
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# Plot}
+\hlkwd{barplot}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{object.size}\hlstd{(df}\hlopt{$}\hlstd{y),}\hlkwd{sum}\hlstd{(}\hlkwd{lm2}\hlstd{(y}\hlopt{~}\hlstd{.,}\hlkwc{data} \hlstd{= df)[[}\hlnum{2}\hlstd{]]),beta_mem)}\hlopt{/}\hlnum{1e6}\hlstd{,}
+        \hlkwc{names.arg} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"Variables"}\hlstd{,}\hlstr{"Total before lm.fit()"}\hlstd{,}\hlstr{"Using Beta"}\hlstd{),}
+        \hlkwc{ylab}\hlstd{=}\hlstr{"MB"}\hlstd{,}\hlkwc{main}\hlstd{=}\hlstr{"Memory management"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-23-1} 
+
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-23-2} 
+
+\end{knitrout}
+\noindent
+Now, we see that the memory used to store Beta is almost nothing compared to the data used to compute lm(). However, by doing this, we do not have directly access to relevant information such as residuals or the fitted values. We can see that the results are very close to each other:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Using lm2}
+\hlkwd{lm2}\hlstd{(y}\hlopt{~}\hlstd{.,}\hlkwc{data} \hlstd{= df)[[}\hlnum{1}\hlstd{]]}\hlopt{$}\hlstd{coefficients[}\hlnum{2}\hlopt{:}\hlnum{4}\hlstd{]}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-24-1} 
+\begin{kframe}\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##            x1            x2            x3 
+##  0.0011743658 -0.0048279397 -0.0002560523
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# Using LSE Beta}
+\hlkwd{t}\hlstd{(Beta)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##              x1           x2            x3
+## [1,] 0.00135383 -0.003337436 -0.0002712319
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
 
 \end{document}
