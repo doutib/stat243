@@ -1,0 +1,340 @@
+\documentclass{llncs}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{listings}
+\usepackage{moreverb}
+\usepackage{inconsolata}
+\pagestyle{plain}
+
+
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Problem Set 5}
+\author{Thibault Doutre, ID : 26980469}
+\institute{STAT 243 : Introduction to Statistical Computing}
+\date{}
+\maketitle
+\bigbreak
+\noindent
+I worked on my own.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Part a}
+If we store 1.000000000001 on a computer, we have 16 digits of accuracy. We can see it by setting the "digits" option in R.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{options}\hlstd{(}\hlkwc{digits}\hlstd{=}\hlnum{16}\hlstd{)}
+\hlnum{1.000000000001}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1.000000000001
+\end{lstlisting}
+\begin{alltt}
+\hlkwd{options}\hlstd{(}\hlkwc{digits}\hlstd{=}\hlnum{17}\hlstd{)}
+\hlnum{1.000000000001}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1.0000000000010001
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+
+\subsection{Part b}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{options}\hlstd{(}\hlkwc{digits}\hlstd{=}\hlnum{16}\hlstd{)}
+\hlstd{x} \hlkwb{=} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlkwd{rep}\hlstd{(}\hlnum{1e-16}\hlstd{,}\hlnum{10000}\hlstd{))}
+\hlkwd{sum}\hlstd{(x)}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1.000000000001
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+The sum function gives the right answer, with the corresponding accuracy of 16 digits.
+
+\subsection{Part c}
+In python however, sum does not give the right answer. We can see that the equivalent of setting digits=16 option in R is setting '.15f' option in python.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+import numpy as np
+x=np.concatenate(([1],np.repeat(1e-16,10000)))
+#sum
+print(format(sum(x), '.15f')) 
+# precision 15f
+print(format(1.000000000001, '.15f'))
+# precision 16f
+print(format(1.000000000001, '.16f'))
+\end{alltt}
+
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## 1.000000000000000
+## 1.000000000001000
+## 1.0000000000010001
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Part d}
+In R:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ((x1 + x2) + x3) + ...}
+\hlstd{sum1}\hlkwb{=}\hlnum{0}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlstd{x)}
+  \hlstd{sum1}\hlkwb{=}\hlstd{sum1}\hlopt{+}\hlstd{i}
+\hlstd{sum1}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# ((xn + xn-1) + xn-2) + ...}
+\hlstd{sum2}\hlkwb{=}\hlnum{0}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlkwd{length}\hlstd{(x)}\hlopt{:}\hlnum{1}\hlstd{)}
+  \hlstd{sum2}\hlkwb{=}\hlstd{sum2}\hlopt{+}\hlstd{x[i]}
+\hlstd{sum2}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1.000000000001
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+Summing in the natural order does not give the right answer but adding in the reverse order gives the good precision.\\
+In Python, same results:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+import numpy as np
+x=np.concatenate(([1],np.repeat(1e-16,10000)))
+#((x1 + x2) + x3) + ...
+sum1=0
+for i in range(0,len(x)):
+  sum1=sum1+x[i]
+print(format(sum1, '.15f'))
+#((xn + xn-1) + xn-2) + ...
+sum2=0
+for i in range(0,len(x)):
+  sum2=sum2+x[len(x)-1-i]
+print(format(sum2, '.15f'))
+\end{alltt}
+
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## 1.000000000000000
+## 1.000000000001000
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+
+\subsection{Part e}
+We can see that the sum function does not sum from the right to the left with this example.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{x} \hlkwb{=} \hlkwd{c}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{1e-16}\hlstd{,}\hlnum{10000}\hlstd{),}\hlnum{1}\hlstd{)}
+\hlcom{# ((x1 + x2) + x3) + ...}
+\hlstd{sum1}\hlkwb{=}\hlnum{0}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlstd{x)}
+  \hlstd{sum1}\hlkwb{=}\hlstd{sum1}\hlopt{+}\hlstd{i}
+\hlstd{sum1}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1.000000000001
+\end{lstlisting}
+\begin{alltt}
+\hlcom{# ((xn + xn-1) + xn-2) + ...}
+\hlstd{sum2}\hlkwb{=}\hlnum{0}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlkwd{length}\hlstd{(x)}\hlopt{:}\hlnum{1}\hlstd{)}
+  \hlstd{sum2}\hlkwb{=}\hlstd{sum2}\hlopt{+}\hlstd{x[i]}
+\hlstd{sum2}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## [1] 1
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+\subsection{Part f}
+The sum function sums the numbers which have the same order of magnitude before adding them together.\\
+Actually, sum is a primitive function : it calls C code directly with .Primitive() and contains no R code.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{sum}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+## function (..., na.rm = FALSE)  .Primitive("sum")
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Basic computations such as summing or subsetting are similar for floats and integers, but there are some computations which are faster when using foating numbers. And example of this is crossproduct, and for this case working with floats in much faster. I would recommand to use integers for sorting and summary though.\\
+We can also notice that using the sum function works a bit faster for floats but using the Reduce('+',) it is similar for integers and for floating numbers. 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(rbenchmark)}
+\hlkwd{options}\hlstd{(}\hlkwc{digits} \hlstd{=} \hlnum{4}\hlstd{)}
+\hlstd{n}\hlkwb{=}\hlnum{10000}
+\hlstd{integers}\hlkwb{=}\hlkwd{sample}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,n)}
+\hlstd{integers2}\hlkwb{=}\hlkwd{sample}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n,n)}
+\hlstd{floats}\hlkwb{=}\hlkwd{sample}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n}\hlopt{+}\hlnum{0.0}\hlstd{,n)}
+\hlstd{floats2}\hlkwb{=}\hlkwd{sample}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n}\hlopt{+}\hlnum{0.0}\hlstd{,n)}
+
+\hlcom{#sum}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{int} \hlstd{=} \hlkwd{sum}\hlstd{(integers) ,}
+  \hlkwc{float} \hlstd{=} \hlkwd{sum}\hlstd{(floats),}
+  \hlkwc{replications} \hlstd{=} \hlnum{100000}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    test elapsed replications
+## 2 float   0.953       100000
+## 1   int   1.004       100000
+\end{lstlisting}
+\begin{alltt}
+\hlcom{#sumBis}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{int} \hlstd{=} \hlkwd{Reduce}\hlstd{(}\hlstr{'+'}\hlstd{,integers) ,}
+  \hlkwc{float} \hlstd{=} \hlkwd{Reduce}\hlstd{(}\hlstr{'+'}\hlstd{,floats),}
+  \hlkwc{replications} \hlstd{=} \hlnum{200}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    test elapsed replications
+## 2 float   0.652          200
+## 1   int   0.644          200
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#subsetting}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{int} \hlstd{= integers[}\hlnum{1}\hlopt{:}\hlnum{100}\hlstd{] ,}
+  \hlkwc{float} \hlstd{= floats[}\hlnum{1}\hlopt{:}\hlnum{100}\hlstd{],}
+  \hlkwc{replications} \hlstd{=} \hlnum{10000}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    test elapsed replications
+## 2 float   0.025        10000
+## 1   int   0.035        10000
+\end{lstlisting}
+\begin{alltt}
+\hlcom{#substracting}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{int} \hlstd{= integers}\hlopt{-}\hlstd{integers2 ,}
+  \hlkwc{float} \hlstd{= floats}\hlopt{-}\hlstd{floats2,}
+  \hlkwc{replications} \hlstd{=} \hlnum{10000}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    test elapsed replications
+## 2 float   0.155        10000
+## 1   int   0.344        10000
+\end{lstlisting}
+\begin{alltt}
+\hlcom{#crossproduct}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{int} \hlstd{=} \hlkwd{crossprod}\hlstd{(integers,integers2) ,}
+  \hlkwc{float} \hlstd{=} \hlkwd{crossprod}\hlstd{(floats,floats2),}
+  \hlkwc{replications} \hlstd{=} \hlnum{10000}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    test elapsed replications
+## 2 float   0.104        10000
+## 1   int   0.485        10000
+\end{lstlisting}
+\begin{alltt}
+\hlcom{#sort}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{int} \hlstd{=} \hlkwd{sort}\hlstd{(integers) ,}
+  \hlkwc{float} \hlstd{=} \hlkwd{sort}\hlstd{(floats),}
+  \hlkwc{replications} \hlstd{=} \hlnum{1000}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    test elapsed replications
+## 2 float   0.686         1000
+## 1   int   0.629         1000
+\end{lstlisting}
+\begin{alltt}
+\hlcom{#summary}
+\hlkwd{benchmark}\hlstd{(}
+  \hlkwc{int} \hlstd{=} \hlkwd{summary}\hlstd{(integers) ,}
+  \hlkwc{float} \hlstd{=} \hlkwd{summary}\hlstd{(floats),}
+  \hlkwc{replications} \hlstd{=} \hlnum{1000}\hlstd{,}
+  \hlkwc{columns}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'test'}\hlstd{,} \hlstr{'elapsed'}\hlstd{,} \hlstr{'replications'}\hlstd{))}
+\end{alltt}
+\begin{lstlisting}[basicstyle=\ttfamily,breaklines=true]
+##    test elapsed replications
+## 2 float   0.600         1000
+## 1   int   0.497         1000
+\end{lstlisting}
+\end{kframe}
+\end{knitrout}
+
+\end{document}
+
+

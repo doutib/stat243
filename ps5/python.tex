@@ -1,0 +1,14 @@
+\documentclass{article}
+\usepackage{python}
+\begin{Schunk}
+\begin{Sinput}
+> driver <- RweaveLatex() 
+> runcode <- driver$runcode
+> driver$runcode <- function(object, chunk, options){
++  if( options$engine == "python" ){
++  driver$writedoc( object, c("\\begin{python}", chunk, "\\end{python}") )
++  } else{
++  runcode( object, chunk, options )
++  }
++ }
+> Sweave( "python.Rnw", driver = driver )

@@ -1,0 +1,176 @@
+\documentclass{llncs}
+\usepackage{listings}
+\usepackage{moreverb}
+\usepackage{inconsolata}
+\pagestyle{plain}
+<<echo=FALSE>>=
+  options(width=60)
+
+  listing <- function(x, options) {
+    paste("\\begin{lstlisting}[basicstyle=\\ttfamily,breaklines=true]\n",
+      x, "\\end{lstlisting}\n", sep = "")
+  }
+  knit_hooks$set(output=listing)
+@
+
+\begin{document}
+
+\title{Problem Set 5}
+\author{Thibault Doutre, ID : 26980469}
+\institute{STAT 243 : Introduction to Statistical Computing}
+\date{}
+\maketitle
+\bigbreak
+\noindent
+I worked on my own.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Part a}
+If we store 1.000000000001 on a computer, we have 16 digits of accuracy. We can see it by setting the "digits" option in R.
+<<>>=
+options(digits=16)
+1.000000000001
+options(digits=17)
+1.000000000001
+@
+
+
+\subsection{Part b}
+<<>>=
+options(digits=16)
+x = c(1,rep(1e-16,10000))
+sum(x)
+@
+The sum function gives the right answer, with the corresponding accuracy of 16 digits.
+
+\subsection{Part c}
+In python however, sum does not give the right answer. We can see that the equivalent of setting digits=16 option in R is setting '.15f' option in python.
+<<engine='python'>>=
+import numpy as np
+x=np.concatenate(([1],np.repeat(1e-16,10000)))
+#sum
+print(format(sum(x), '.15f')) 
+# precision 15f
+print(format(1.000000000001, '.15f'))
+# precision 16f
+print(format(1.000000000001, '.16f'))
+@
+
+\subsection{Part d}
+In R:
+<<>>=
+# ((x1 + x2) + x3) + ...
+sum1=0
+for (i in x)
+  sum1=sum1+i
+sum1
+# ((xn + xn-1) + xn-2) + ...
+sum2=0
+for (i in length(x):1)
+  sum2=sum2+x[i]
+sum2
+@
+Summing in the natural order does not give the right answer but adding in the reverse order gives the good precision.\\
+In Python, same results:
+<<engine='python'>>=
+import numpy as np
+x=np.concatenate(([1],np.repeat(1e-16,10000)))
+#((x1 + x2) + x3) + ...
+sum1=0
+for i in range(0,len(x)):
+  sum1=sum1+x[i]
+print(format(sum1, '.15f'))
+#((xn + xn-1) + xn-2) + ...
+sum2=0
+for i in range(0,len(x)):
+  sum2=sum2+x[len(x)-1-i]
+print(format(sum2, '.15f'))
+@
+
+
+\subsection{Part e}
+We can see that the sum function does not sum from the right to the left with this example.
+<<>>=
+x = c(rep(1e-16,10000),1)
+# ((x1 + x2) + x3) + ...
+sum1=0
+for (i in x)
+  sum1=sum1+i
+sum1
+# ((xn + xn-1) + xn-2) + ...
+sum2=0
+for (i in length(x):1)
+  sum2=sum2+x[i]
+sum2
+@
+\subsection{Part f}
+The sum function sums the numbers which have the same order of magnitude before adding them together.\\
+Actually, sum is a primitive function : it calls C code directly with .Primitive() and contains no R code.
+<<>>=
+sum
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problem 2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Basic computations such as summing or subsetting are similar for floats and integers, but there are some computations which are faster when using foating numbers. And example of this is crossproduct, and for this case working with floats in much faster. I would recommand to use integers for sorting and summary though.\\
+We can also notice that using the sum function works a bit faster for floats but using the Reduce('+',) it is similar for integers and for floating numbers. 
+<<>>=
+library(rbenchmark)
+options(digits = 4)
+n=10000
+integers=sample(1:n,n)
+integers2=sample(1:n,n)
+floats=sample(1:n+0.0,n)
+floats2=sample(1:n+0.0,n)
+
+#sum
+benchmark(
+  int = sum(integers) ,
+  float = sum(floats),
+  replications = 100000,
+  columns=c('test', 'elapsed', 'replications'))
+#sumBis
+benchmark(
+  int = Reduce('+',integers) ,
+  float = Reduce('+',floats),
+  replications = 200,
+  columns=c('test', 'elapsed', 'replications'))
+@
+
+<<>>=
+#subsetting
+benchmark(
+  int = integers[1:100] ,
+  float = floats[1:100],
+  replications = 10000,
+  columns=c('test', 'elapsed', 'replications'))
+#substracting
+benchmark(
+  int = integers-integers2 ,
+  float = floats-floats2,
+  replications = 10000,
+  columns=c('test', 'elapsed', 'replications'))
+#crossproduct
+benchmark(
+  int = crossprod(integers,integers2) ,
+  float = crossprod(floats,floats2),
+  replications = 10000,
+  columns=c('test', 'elapsed', 'replications'))
+#sort
+benchmark(
+  int = sort(integers) ,
+  float = sort(floats),
+  replications = 1000,
+  columns=c('test', 'elapsed', 'replications'))
+#summary
+benchmark(
+  int = summary(integers) ,
+  float = summary(floats),
+  replications = 1000,
+  columns=c('test', 'elapsed', 'replications'))
+@
+
+\end{document}
+
+
