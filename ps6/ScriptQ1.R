@@ -1,13 +1,16 @@
-setwd('/Users/doutre/Documents/stat243/ps6')
+#setwd('/Users/doutre/Documents/stat243/ps6')
 
 #Download
+print('Downloading files...')
 url = 'http://www.stat.berkeley.edu/share/paciorek/1987-2008.csvs.tgz'
 download.file(url, ".file")
 
 # Untar
+print('Untar files...')
 untar(".file", compressed = 'bzip2', exdir = "./data/")
 
 # Create Database
+print('Creating Database...')
 library(RSQLite)
 drv <- dbDriver("SQLite")
 db <- dbConnect(drv, dbname = "airline.db")
@@ -47,16 +50,20 @@ dbSendQuery(conn = db,
 )
 
 # Append years into airline table
+print('Completing database...')
 for (i in 1987:2008){
-  con=pipe(paste("bzcat ",i,".csv.bz2",sep=""), open = 'r')
+  print(paste('Year',i,'in progress...'))
+  con=pipe(paste("bzcat ./data/",i,".csv.bz2",sep=""), open = 'r')
   lines = read.csv(con, header = TRUE)
   dbWriteTable(db, paste("y",i,sep=""),lines)
   dbSendQuery(db,paste("INSERT INTO airline SELECT * FROM y",i,sep=""))
   dbRemoveTable(db,paste("y",i,sep=""))
   close(con)
 }
+print('Done')
 
 # Size in Gb
+print('Size of Database:')
 file.size("./airline.db")/2^30
 
 # Delete database
