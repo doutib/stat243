@@ -1,0 +1,113 @@
+\documentclass{llncs}
+\usepackage{listings}
+\usepackage{moreverb}
+\usepackage{inconsolata}
+\pagestyle{plain}
+<<echo=FALSE>>=
+  options(width=60)
+
+  listing <- function(x, options) {
+    paste("\\begin{lstlisting}[basicstyle=\\ttfamily,breaklines=true]\n",
+      x, "\\end{lstlisting}\n", sep = "")
+  }
+  knit_hooks$set(output=listing)
+@
+
+\begin{document}
+
+\title{Problem Set 6}
+\author{Thibault Doutre, Student ID 26980469}
+\institute{STAT243 : Statistical Computing\\
+University of California, Berkeley}
+\date{\today}
+\maketitle
+\bigbreak
+\noindent
+I worked on my own.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Airline Database}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I create a script which I can execute via EC2. The script builds a database "airline.db" and store every file into a single table, using RSQLite. In order to do it, I first download the files in a directory named "data" and create the database. In this database, I store a table called "airline" in wich I will append the data for every year.
+<<eval=FALSE>>=
+#Download
+url = 'http://www.stat.berkeley.edu/share/paciorek/1987-2008.csvs.tgz'
+download.file(url, ".file")
+
+# Untar
+untar(".file", compressed = 'bzip2', exdir = "./data/")
+
+# Create Database
+library(RSQLite)
+drv <- dbDriver("SQLite")
+db <- dbConnect(drv, dbname = "airline.db")
+
+# Create airline Table
+dbSendQuery(conn = db,
+            "CREATE TABLE airline
+          ( Year                    INTEGER,
+            Month                   INTEGER,
+            DayofMonth              INTEGER,
+            DayOfWeek               INTEGER,
+            DepTime                 INTEGER,
+            CRSDepTime              INTEGER,
+            ArrTime                 INTEGER,
+            CRSArrTime              INTEGER,
+            UniqueCarrier           CHAR(4),
+            FlightNum               INTEGER,
+            TailNum                 INTEGER,
+            ActualElapsedTime       INTEGER,
+            CRSElapsedTime          INTEGER,
+            AirTime                 INTEGER,
+            ArrDelay                INTEGER,
+            DepDelay                INTEGER,
+            Origin                  CHAR(3),
+            Dest                    CHAR(3),
+            Distance                INTEGER,
+            TaxiIn                  INTEGER,
+            TaxiOut                 INTEGER,
+            Cancelled               INTEGER,
+            CancellationCode        INTEGER,
+            Diverted                INTEGER,
+            CarrierDelay            INTEGER,
+            WeatherDelay            INTEGER,
+            NASDelay                INTEGER,
+            SecurityDelay           INTEGER,
+            LateAircraftDelay       INTEGER)"
+)
+
+@
+Then, for every year:
+\begin{itemize}
+\item Open a connection to the file with bzcat 
+\item Get the data and store it into a variable "line"
+\item Create a temporary table from line
+\item Append this table to "airline" using INSERT
+\item Remove the temporary table
+\item Close the connection
+\end{itemize}
+<<eval=FALSE>>=
+# Append years into airline table
+for (i in 1987:2008){
+  con=pipe(paste("bzcat ",i,".csv.bz2",sep=""), open = 'r')
+  lines = read.csv(con, header = TRUE)
+  dbWriteTable(db, paste("y",i,sep=""),lines)
+  dbSendQuery(db,paste("INSERT INTO airline SELECT * FROM y",i,sep=""))
+  dbRemoveTable(db,paste("y",i,sep=""))
+  close(con)
+}
+@
+Then, I print the size of the database:
+<<eval=FALSE>>=
+# Size in Gb
+file.size("./airline.db")/2^30
+# 9.273604
+
+# Number of lines
+dbGetQuery(db, "SELECT COUNT(*) FROM airline")
+# 123534969
+@
+We can see that the database is 9 Gb big, it is less than the original CSV of 12 Gb but significantly bigger than the bzipped file of 1.7 Gb. We can see that the airline table in the database has one hundred million rows a mere.
+
+\end{document}
+
+

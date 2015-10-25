@@ -1,0 +1,134 @@
+\documentclass{llncs}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{listings}
+\usepackage{moreverb}
+\usepackage{inconsolata}
+\pagestyle{plain}
+
+
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Problem Set 6}
+\author{Thibault Doutre, Student ID 26980469}
+\institute{STAT243 : Statistical Computing\\
+University of California, Berkeley}
+\date{\today}
+\maketitle
+\bigbreak
+\noindent
+I worked on my own.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Airline Database}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I create a script which I can execute via EC2. The script builds a database "airline.db" and store every file into a single table, using RSQLite. In order to do it, I first download the files in a directory named "data" and create the database. In this database, I store a table called "airline" in wich I will append the data for every year.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#Download}
+\hlstd{url} \hlkwb{=} \hlstr{'http://www.stat.berkeley.edu/share/paciorek/1987-2008.csvs.tgz'}
+\hlkwd{download.file}\hlstd{(url,} \hlstr{".file"}\hlstd{)}
+
+\hlcom{# Untar}
+\hlkwd{untar}\hlstd{(}\hlstr{".file"}\hlstd{,} \hlkwc{compressed} \hlstd{=} \hlstr{'bzip2'}\hlstd{,} \hlkwc{exdir} \hlstd{=} \hlstr{"./data/"}\hlstd{)}
+
+\hlcom{# Create Database}
+\hlkwd{library}\hlstd{(RSQLite)}
+\hlstd{drv} \hlkwb{<-} \hlkwd{dbDriver}\hlstd{(}\hlstr{"SQLite"}\hlstd{)}
+\hlstd{db} \hlkwb{<-} \hlkwd{dbConnect}\hlstd{(drv,} \hlkwc{dbname} \hlstd{=} \hlstr{"airline.db"}\hlstd{)}
+
+\hlcom{# Create airline Table}
+\hlkwd{dbSendQuery}\hlstd{(}\hlkwc{conn} \hlstd{= db,}
+            \hlstr{[1325 chars quoted with '"']}
+\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+Then, for every year:
+\begin{itemize}
+\item Open a connection to the file with bzcat 
+\item Get the data and store it into a variable "line"
+\item Create a temporary table from line
+\item Append this table to "airline" using INSERT
+\item Remove the temporary table
+\item Close the connection
+\end{itemize}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Append years into airline table}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1987}\hlopt{:}\hlnum{2008}\hlstd{)\{}
+  \hlstd{con}\hlkwb{=}\hlkwd{pipe}\hlstd{(}\hlkwd{paste}\hlstd{(}\hlstr{"bzcat "}\hlstd{,i,}\hlstr{".csv.bz2"}\hlstd{,}\hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{),} \hlkwc{open} \hlstd{=} \hlstr{'r'}\hlstd{)}
+  \hlstd{lines} \hlkwb{=} \hlkwd{read.csv}\hlstd{(con,} \hlkwc{header} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+  \hlkwd{dbWriteTable}\hlstd{(db,} \hlkwd{paste}\hlstd{(}\hlstr{"y"}\hlstd{,i,}\hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{),lines)}
+  \hlkwd{dbSendQuery}\hlstd{(db,}\hlkwd{paste}\hlstd{(}\hlstr{"INSERT INTO airline SELECT * FROM y"}\hlstd{,i,}\hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{))}
+  \hlkwd{dbRemoveTable}\hlstd{(db,}\hlkwd{paste}\hlstd{(}\hlstr{"y"}\hlstd{,i,}\hlkwc{sep}\hlstd{=}\hlstr{""}\hlstd{))}
+  \hlkwd{close}\hlstd{(con)}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+Then, I print the size of the database:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Size in Gb}
+\hlkwd{file.size}\hlstd{(}\hlstr{"./airline.db"}\hlstd{)}\hlopt{/}\hlnum{2}\hlopt{^}\hlnum{30}
+
+\hlcom{# 9.273604}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+We can see that the database is 9 Gb big, it is less than the original CSV of 12 Gb but significantly bigger than the bzipped file of 1.7 Gb.
+
+\end{document}
+
+
