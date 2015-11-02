@@ -19,11 +19,11 @@ print('Creating Index...')
 dbSendQuery(db,"CREATE INDEX index_name ON airline1 (Origin,Dest,Month,DayOfWeek,CRSDepTime,DepDelay)")
 
 # Begin parallel programming
-library(doParallel)
 library(foreach)
+library(doMC)
 
-nCores <- 4 # to set manually
-registerDoParallel(nCores) 
+# Set up 4 cores 
+registerDoMC(cores = 4)
 
 system.time({
   print('computing aggregation...')
@@ -33,8 +33,8 @@ system.time({
       s=dbGetQuery(db0," SELECT 
                    Origin, 
                    Dest,
-                   substr('Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec ',
-                   (Month * 4) - 3, 3) AS Month,
+                   substr('Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec '
+                   ,(Month * 4) - 3, 3) AS Month,
                    substr('Mon Tue Wed Thu Fri Sat Sun ', (DayOfWeek * 4) - 
                    3, 3) AS Day,
                    ROUND(CRSDepTime/100) AS Hour
@@ -43,18 +43,20 @@ system.time({
       return(s)
       dbDisconnect(db0)
     }
-    db1=dbConnect(drv, dbname = fileName)
-    s=dbGetQuery(db1,paste("
-                           SELECT 
-                           coalesce(round(count(case when DepDelay >",i,
-                           " then 1 end)/(count(DepDelay)+.0)*100), 0) as PercentageDelay",i,"
-                           FROM airline1 
-                           GROUP BY Origin, Dest, Month, DayOfWeek, 
-                           ROUND(CRSDepTime/100)",sep=""))
-    return(s)
-    dbDisconnect(db1)
+    else{
+      db1=dbConnect(drv, dbname = fileName)
+      s=dbGetQuery(db1,paste("
+                             SELECT 
+                             coalesce(round(count(case when DepDelay >",i,
+                             " then 1 end)/(count(DepDelay)+.0)*100), 0) as 
+                             PercentageDelay",i,"
+                             FROM airline1 
+                             GROUP BY Origin, Dest, Month, DayOfWeek, 
+                             ROUND(CRSDepTime/100)",sep=""))
+      return(s)
+      dbDisconnect(db1)
+    }
   }
   print('writing table...')
   dbWriteTable(db,"summary",as.data.frame(out))
 })
-
