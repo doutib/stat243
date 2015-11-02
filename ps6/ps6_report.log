@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.9.4)  24 OCT 2015 23:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.9.4)  2 NOV 2015 00:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -398,68 +398,179 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 65.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 65.
-Package color Info: Redefining color shadecolor on input line 74.
-LaTeX Font Info:    Try loading font information for OT1+zi4 on input line 75.
+Package color Info: Redefining color shadecolor on input line 76.
+LaTeX Font Info:    Try loading font information for OT1+zi4 on input line 77.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/inconsolata/ot1zi4.fd
 File: ot1zi4.fd 2014/06/22 OT1/zi4 (Inconsolata)
 )
 
 LaTeX Font Warning: Font shape `OT1/zi4/m/it' undefined
-(Font)              using `OT1/zi4/m/n' instead on input line 76.
+(Font)              using `OT1/zi4/m/n' instead on input line 78.
 
-LaTeX Font Info:    Try loading font information for TS1+zi4 on input line 77.
+LaTeX Font Info:    Try loading font information for TS1+zi4 on input line 79.
 (/usr/local/texlive/2015/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
 File: ts1zi4.fd 2014/06/22 Fontinst v1.933 font definitions for TS1/zi4.
 )
-Overfull \hbox (0.87646pt too wide) in paragraph at lines 77--77
+Overfull \hbox (0.87646pt too wide) in paragraph at lines 79--79
 [][]\OT1/zi4/m/n/10 url[] []=[] []\TS1/zi4/m/n/10 '\OT1/zi4/m/n/10 http://www.s
 tat.berkeley.edu/share/paciorek/1987-2008.csvs.tgz\TS1/zi4/m/n/10 '[][] 
  []
 
 LaTeX Font Info:    Font shape `OT1/zi4/bx/n' in size <10> not available
-(Font)              Font shape `OT1/zi4/b/n' tried instead on input line 78.
-Package color Info: Redefining color shadecolor on input line 105.
-LaTeX Font Info:    Try loading font information for OMS+zi4 on input line 108.
+(Font)              Font shape `OT1/zi4/b/n' tried instead on input line 80.
+Package color Info: Redefining color shadecolor on input line 107.
+LaTeX Font Info:    Try loading font information for OMS+zi4 on input line 110.
 
-LaTeX Font Info:    No file OMSzi4.fd. on input line 108.
+LaTeX Font Info:    No file OMSzi4.fd. on input line 110.
 
 LaTeX Font Warning: Font shape `OMS/zi4/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 108.
+(Font)              for symbol `textbraceleft' on input line 110.
 
 [1
 
 {/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Package color Info: Redefining color shadecolor on input line 121.
+Package color Info: Redefining color shadecolor on input line 123.
+Package color Info: Redefining color shadecolor on input line 142.
+Package color Info: Redefining color shadecolor on input line 155.
 
-[2] (./ps6_report.aux)
+[2]
+Package color Info: Redefining color shadecolor on input line 171.
+Package color Info: Redefining color shadecolor on input line 201.
+
+Overfull \hbox (50.87646pt too wide) in paragraph at lines 203--203
+[]\OT1/zi4/m/it/10 Origin Dest Month Day Hour PercentageDelay180 PercentageDela
+y60 PercentageDelay30[] 
+ []
+
+
+Overfull \hbox (2.87646pt too wide) in paragraph at lines 204--204
+[]\OT1/zi4/m/it/10 1    ABE  ATL   Jan Fri    7                  0             
+    0                25[] 
+ []
+
+
+Overfull \hbox (2.87646pt too wide) in paragraph at lines 205--205
+[]\OT1/zi4/m/it/10 2    ABE  ATL   Jan Fri   13                  0             
+    0                 0[] 
+ []
+
+
+Overfull \hbox (2.87646pt too wide) in paragraph at lines 206--206
+[]\OT1/zi4/m/it/10 3    ABE  ATL   Jan Fri   18                  0             
+    0                 0[] 
+ []
+
+
+Overfull \hbox (1.87646pt too wide) in paragraph at lines 207--207
+[]\OT1/zi4/m/it/10 4    ABE  ATL   Jan Mon    7                  0             
+    0                 0[] 
+ []
+
+
+Overfull \hbox (4.87646pt too wide) in paragraph at lines 208--208
+[]\OT1/zi4/m/it/10 5    ABE  ATL   Jan Mon   13                  0             
+   20                20[] 
+ []
+
+
+Overfull \hbox (2.87646pt too wide) in paragraph at lines 209--209
+[]\OT1/zi4/m/it/10 6    ABE  ATL   Jan Mon   18                  0             
+    0                 0[] 
+ []
+
+[3]
+Package color Info: Redefining color shadecolor on input line 215.
+Package color Info: Redefining color shadecolor on input line 228.
+Package color Info: Redefining color shadecolor on input line 238.
+Package color Info: Redefining color shadecolor on input line 252.
+ [4]
+Package color Info: Redefining color shadecolor on input line 279.
+
+Overfull \hbox (1.87646pt too wide) in paragraph at lines 301--301
+[]                   \OT1/zi4/m/it/10 substr(\TS1/zi4/m/n/10 '\OT1/zi4/m/it/10 
+Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec \TS1/zi4/m/n/10 '[] 
+ []
+
+[5]
+Package color Info: Redefining color shadecolor on input line 327.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 350.
+
+ (/usr/local/texlive/2015/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 350.
+
+Overfull \hbox (5.87988pt too wide) in paragraph at lines 352--354
+[][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[6]
+Overfull \hbox (5.87988pt too wide) in paragraph at lines 364--365
+[][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (5.87988pt too wide) in paragraph at lines 383--384
+[][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[7]
+Package color Info: Redefining color shadecolor on input line 411.
+
+Overfull \hbox (2.87646pt too wide) in paragraph at lines 429--429
+[]        \OT1/zi4/m/it/10 keyVals = []\TS1/zi4/m/n/10 '\OT1/zi4/m/it/10 -\TS1/
+zi4/m/n/10 '[][]\OT1/zi4/b/n/10 .join[]\OT1/zi4/m/it/10 ([vals[1],vals[3],[]\OT
+1/zi4/b/n/10 str[]\OT1/zi4/m/it/10 ([]\OT1/zi4/b/n/10 int[]\OT1/zi4/m/it/10 ([]
+\OT1/zi4/b/n/10 float[]\OT1/zi4/m/it/10 (vals[5])/100))[] 
+ []
+
+Package color Info: Redefining color shadecolor on input line 453.
+[8]
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 484.
+
+ (/usr/local/texlive/2015/texmf-dist/tex/latex/base/omlcmr.fd
+File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 484.
+
+Overfull \hbox (24.88025pt too wide) in paragraph at lines 484--485
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+ []
+
+[9] (./ps6_report.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 3815 strings out of 493089
- 55575 string characters out of 6134843
- 122295 words of memory out of 5000000
- 7246 multiletter control sequences out of 15000+600000
- 6155 words of font info for 23 fonts, out of 8000000 for 9000
+ 3856 strings out of 493089
+ 56274 string characters out of 6134843
+ 143295 words of memory out of 5000000
+ 7280 multiletter control sequences out of 15000+600000
+ 6490 words of font info for 24 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,5n,32p,359b,255s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-0.enc}
-{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}</us
-r/local/texlive/2015/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b
-.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/inconsolata/Inconso
-lata-zi4r.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmbx10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r9.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
-0.pfb>
-Output written on ps6_report.pdf (2 pages, 84407 bytes).
+ 38i,6n,32p,655b,1499s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+}{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-0.enc}{
+/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}</usr
+/local/texlive/2015/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.
+pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/inconsolata/Inconsol
+ata-zi4r.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmbx10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmi10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9
+.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
+pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pf
+b>
+Output written on ps6_report.pdf (9 pages, 134351 bytes).
 PDF statistics:
- 43 PDF objects out of 1000 (max. 8388607)
- 31 compressed objects within 1 object stream
+ 75 PDF objects out of 1000 (max. 8388607)
+ 54 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
