@@ -1,0 +1,42 @@
+1
+The goals of the simulation are:
+- Assess the accuracy of the proposed asymptotic approximation in finite samples
+- Examine the power of the EM test
+
+The metrics they consider in assessing their methods are Type I errors and sensitivities (powers).
+
+2
+They had to choose the mixture parameters (alpha), the parameters of the gaussians (theta and sigma) and the sample size (n).
+The authors chose 8 different models with 1 or 2 levels olny for each input; this affects the statistical power of the test. Moreover, they chose 1 theta combianation for the mixture and only 2 type of mixtures (3 and 4 gaussians against 2).
+
+3
+It would have been good to have many inputs, or random inputs to asses the efficiency of the model. We actually don't know if they use these inputs due to the fact that it is well suited for the study or not.
+
+4
+In this paper the authors discretize the inputs, each into a very small number of levels:
+2 levels for n
+2 levels for the alphas
+2 levels for the sigmas
+Which is obviously not enough to conclude things like "Clearly, as the sample size increases, the power increases".
+
+An option would be to have a l	arger number of levels and carry out fractional factorial for choosing which treatment combinations to omit and so estimate the main effects.
+Another option would be to randomly choose each input in treating them as random variables (for the parameters of the mixture model for instance).
+
+5
+Their figures are not very efficient when presenting results because they don't compare directly the typeI errors for m0=2 and m0=3. A good way to do that might be to plot a bunch of 4 boxplots with both data in them.
+Moreover, the tables are really hard to read, it would have been better to plot small graphs.
+
+As for the standard errors, they are pretty large compared to the difference of the means between the first and the third iteration, especially for significance level=1%. They do not convince the reader that they did enough simulation because the levels are not large enough. Moreover only one value of theta is specified in the study.
+
+6
+This is true that the powers for n=400 are higher than for n=200 but one cannot conclude anything about global increase with n based on 2 points.
+We can see that the algorithm converges very quickly, 3 iterations.
+For the same sigmas, there is one better combination of alphas, and this is verified for n=200 and n=400. Idem when they change the variances.
+
+7
+estimated accuracy of results: barplots for typeI errors but missing for powers
+descriptions of pseudorandom-number generators: NA
+numerical algorithms: EM
+computers: NA
+programming languages: R
+major software components that were used: NA
