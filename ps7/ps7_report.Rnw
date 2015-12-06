@@ -1,0 +1,341 @@
+\documentclass{llncs}
+\usepackage{listings}
+\usepackage{moreverb}
+\usepackage{inconsolata}
+\usepackage{amsmath}
+\usepackage{stmaryrd}
+\usepackage{bbm}
+\pagestyle{plain}
+<<echo=FALSE>>=
+  options(width=60)
+
+  listing <- function(x, options) {
+    paste("\\begin{lstlisting}[basicstyle=\\ttfamily,breaklines=true]\n",
+      x, "\\end{lstlisting}\n", sep = "")
+  }
+  knit_hooks$set(output=listing)
+@
+
+\begin{document}
+
+\title{Problem Set 7}
+\author{Thibault Doutre, Student ID 26980469}
+\institute{STAT243 : Statistical Computing\\
+University of California, Berkeley}
+\date{\today}
+\maketitle
+\bigbreak
+\noindent
+I worked on my own.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+1
+The goals of the simulation are:
+\begin{itemize}
+\item Assess the accuracy of the proposed asymptotic approximation in finite samples
+\item Examine the power of the EM test
+\end{itemize}
+The metrics they consider in assessing their methods are Type I errors and sensitivities (powers).
+\\\\
+2
+They had to choose the mixture parameters (alpha), the parameters of the gaussians (theta and sigma) and the sample size (n).
+The authors chose 8 different models with 1 or 2 levels olny for each input; this affects the statistical power of the test. Moreover, they chose 1 theta combianation for the mixture and only 2 type of mixtures (3 and 4 gaussians against 2).
+\\\\
+3
+It would have been good to have many inputs, or random inputs to asses the efficiency of the model. We actually don't know if they use these inputs due to the fact that it is well suited for the study or not.
+\\\\
+4
+In this paper the authors discretize the inputs, each into a very small number of levels:
+\begin{itemize}
+\item 2 levels for n
+\item 2 levels for the alphas
+\item 2 levels for the sigmas
+\end{itemize}
+Which is obviously not enough to conclude things like "Clearly, as the sample size increases, the power increases".
+\\
+An option would be to have a l	arger number of levels and carry out fractional factorial for choosing which treatment combinations to omit and so estimate the main effects.
+Another option would be to randomly choose each input in treating them as random variables (for the parameters of the mixture model for instance).
+\\\\
+5
+Their figures are not very efficient when presenting results because they don't compare directly the typeI errors for m0=2 and m0=3. A good way to do that might be to plot a bunch of 4 boxplots with both data in them.
+Moreover, the tables are really hard to read, it would have been better to plot small graphs.
+\\\\
+As for the standard errors, they are pretty large compared to the difference of the means between the first and the third iteration, especially for significance level=1\%. They do not convince the reader that they did enough simulation because the levels are not large enough. Moreover only one value of theta is specified in the study.
+\\\\
+6
+This is true that the powers for n=400 are higher than for n=200 but one cannot conclude anything about global increase with n based on 2 points.
+We can see that the algorithm converges very quickly, 3 iterations.
+For the same sigmas, there is one better combination of alphas, and this is verified for n=200 and n=400. Idem when they change the variances.
+\\\\
+7
+estimated accuracy of results: barplots for typeI errors but missing for powers\\
+descriptions of pseudorandom-number generators: NA\\
+numerical algorithms: EM\\
+computers: NA\\
+programming languages: R\\
+major software components that were used: NA\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{}
+According to the algorithm provided in the unit 9, we have the following computations:
+\begin{itemize}
+\item 0 multiplication, 0 division
+\item 0 multiplication, $n-1$ divisions
+\item for $i = 2..n$
+\begin{itemize}
+\item $i-1$ multiplications, 0 division
+\item for $j = i+1..n$
+\begin{itemize}
+\item $i-1$ multiplications, 1 division
+\end{itemize}
+\end{itemize}
+\end{itemize}
+Which is equivalent to:
+\begin{itemize}
+\item 0 multiplication, 0 division
+\item 0 multiplication, $n-1$ divisions
+\item for $i = 2..n$
+\begin{itemize}
+\item $i-1$ multiplications, 0 division
+\item $(i-1)(n-i)$ multiplications, $n-i$ divisions
+\end{itemize}
+\end{itemize}
+Which is equivalent to:
+\begin{itemize}
+\item 0 multiplication, 0 division
+\item 0 multiplication, $n-1$ divisions
+\item $\sum_{i=2}^{n} (i-1)$ multiplications, 0 division
+\item $\sum_{i=2}^{n}(i-1)(n-i)$ multiplications, $\sum_{i=2}^{n}(n-i)$ divisions
+\end{itemize}
+Which is equivalent to:
+\begin{itemize}
+\item 0 multiplication, 0 division
+\item 0 multiplication, $n-1$ divisions
+\item $\frac{n(n-1)}{2}$ multiplications, 0 division
+\item $\frac{n(n-1)(n-2)}{6}$ multiplications, $\frac{(n-1)(n-2)}{2}$ divisions
+\end{itemize}
+Then, the total number of multiplications is: $\frac{n(n^{2}-1)}{6}$ and the total number of divisions is $\frac{n(n-1)}{2}$. As in the notes, we can see that the computational cost is $\frac{n^{3}}{6}+\frac{n^{2}}{2}+O(n)$.
+
+
+\subsection{}
+We can indeed store the Cholesky upper triangular matrix U in the storage space that is used for the original matrix by overwriting the original matrix. Indeed, here is the algorithm based on the one provided in unit 9. The stars in the matrix show the components that have been modified at each step.
+\begin{itemize}
+\item $A_{11}=\sqrt[]{A_{11}}$\\
+$\begin{pmatrix}
+   \ast      & \ldots      & \cdot        \\
+   \vdots   & \ddots 	  & \vdots             \\
+   \cdot    & \ldots      & \cdot   \\
+ \end{pmatrix}$
+\item For $j=2..n$ $A_{1j}=A_{1j}/A_{11}$\\
+$\begin{pmatrix}
+   \ast      & \ldots      & \cdot        \\
+   \ast   & \ddots 	  & \vdots             \\
+   \ast    & \ldots      & \cdot   \\
+ \end{pmatrix}$
+\item for $i = 2..n$
+\begin{itemize}
+\item $A_{ii}=\sqrt[]{A_{ii}-\sum_{k=1}^{i-1}A^{2}_{ki}}$\\
+$\begin{pmatrix}
+   \ast      & \ldots      & \cdot        \\
+   \ast   & \ast 	  & \vdots             \\
+   \ast    & \ldots      & \ast   \\
+ \end{pmatrix}$
+\item For $j = i+1..n$
+\begin{itemize}
+\item $A_{ij}=\frac{A_{ij}-\sum_{k=1}^{i-1}A_{ki}A_{kj}}{A_{ii}}$ 
+\end{itemize}
+$\begin{pmatrix}
+   \ast      & \ldots      & \cdot        \\
+   \ast   & \ast 	  & \ast             \\
+   \ast    & \ldots      & \ast   \\
+ \end{pmatrix}$
+\end{itemize}
+$\begin{pmatrix}
+   \ast      & \ast      & \ast        \\
+   \ast   & \ast 	  & \ast             \\
+   \ast    & \ldots      & \ast   \\
+ \end{pmatrix}$
+\item Return the upper triangular part of the matrix.
+\end{itemize}
+
+\subsection{}
+In order randomly generate a symmetric positive definite Matrix, I use Hadamard's lemma which states that a symmetric diagonally dominant matrix is invertible. Then, for different values of n, the size of this matrix, I compute both the memory used by storing X and Xc, respectively the covariance marix and the Upper triangular matrix issued from the Cholesky decomposition. We can observe that the memory used to create Xc is the same as the memory used to store X. This means that the "chol" algorithm from "base" in R is not overwriting the X matrix as specified before. Indeed, the algorithm allocate some space for the new Matrix and do the computations.
+<<>>=
+library(pryr)
+memXc=c()
+memX=c()
+m0=0
+for (n in seq(100,1500,100)){
+  X0=matrix(runif(n*n),n,n)
+  X=NULL
+  m0=mem_used()
+  X=(X0+t(X0))/n+diag(n)
+  memX=c(memX,mem_used()-m0)
+  m0=mem_used()
+  X=chol(X)
+  memXc=c(memXc,mem_used()-m0) 
+}
+plot(memX/1000,type="l",xlab="n",ylab="Memory")
+lines(memXc/1000,type="o")
+legend("topleft",
+       c("memory used to store X","additional memory for Xc"),
+       pch=c(NA,1),lty=c(1,0))
+title(main = "Memory used for storing X and Xc")
+@
+We can see that the additional memory used by the cholesky decomposition is not exactly zero, but 120 MB, which is much less than the memory used to store X. Apparently, the chol function uses more memory the first time it is computed in the loop.
+<<>>=
+memX
+memXc
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%
+\subsection{}
+%%%%%%%%%%%%%%%%%%%
+
+<<>>=
+# Initialize Definite positive matrix
+n=5000
+X0 = matrix(sample(0:9,n*n,replace=TRUE),n,n)
+X = crossprod(X0,X0)
+
+# Initialize vector
+y = matrix(sample(0:9,n,replace=TRUE),ncol=1)
+
+# Compute elapsed time 
+# Inverse and %*%
+system.time({Xi=solve(X);xinverse=Xi%*%y})
+# Solve
+system.time({xsolve=solve(X,y)})
+# Cholesky
+system.time({U=chol(X);
+xchol=backsolve(U, backsolve(U, y, transpose = TRUE))})
+@
+
+Here we have to look at the user time , which is the total time spent to compute the querries such as if everything were running in a single thread.
+The naive way should be 6 times slower than the Cholesky. Here we see the time to solve the equations and not only the time spent to do the decomposition or the inverse matrix. The solve function calls the internal function $.Internal(La\_solve(a, b, tol))$.
+
+%%%%%%%%%%%%%%%%%%%
+\subsection{}
+%%%%%%%%%%%%%%%%%%%
+Are the results for b the same numerically for the different methods (up to machine precision)? 
+<<>>=
+# Inverse and Solve
+max(xinverse-xsolve)
+# Cholesky and Solve
+max(xchol-xsolve)
+# Inverse and Cholesky
+max(xinverse-xchol)
+@
+
+
+I relate this to the condition number of the calculation:
+<<>>=
+# Inverse and Solve
+min_cond1=sqrt(sum((xinverse-xsolve)^2))/sqrt(sum((xsolve)^2))*10^16
+min_cond1
+# Cholesky and Solve
+min_cond2=sqrt(sum((xchol-xsolve)^2))/sqrt(sum((xinverse)^2))*10^16
+min_cond2
+# Inverse and Cholesky
+min_cond3=sqrt(sum((xinverse-xchol)^2))/sqrt(sum((xchol)^2))*10^16
+min_cond3
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Since $\Sigma \in \mathbbm{M}_{p}(\mathbbm{R})$ is symmetric positive definite i.e. in $S^{++}_{p}(\mathbbm{R})$, ${\Sigma}^{-1}$ is also in $S^{++}_{p}(\mathbbm{R})$. Using Cholesky decomposition, we have:
+\begin{equation}
+\exists P \in \mathbbm{UT}^{+}_{p}(\mathbbm{R}) \hspace{.5cm}s.t.\hspace{.5cm} {\Sigma}= P^{T}P.
+\end{equation}
+Using the property that the inverse of an upper triangular matrix is an upper triangular matrix, we have:
+\begin{equation}
+{\Sigma}^{-1}= P^{-1}P^{-T}=U^{T}U \hspace{.5cm}with\hspace{.5cm} U=P^{-T} \in \mathbbm{UT}^{+}_{p}(\mathbbm{R}).
+\end{equation}
+Therefore, the generalized least squares problem becomes:
+\begin{align}
+&Find \hspace{.5cm} \hat{\beta} \hspace{.5cm} s.t. \hspace{.5cm} X^{T}U^{T}UX \hat{\beta}= X^{T}U^{T}UY.\nonumber\\
+i.e. \hspace{.5cm} & Find \hspace{.5cm} \hat{\beta} \hspace{.5cm} s.t. \hspace{.5cm} (UX)^{T}(UX) \hat{\beta}= (UX)^{T}(UY).
+\end{align}
+Therefore, the generalized least squares model (GLS) is the ordinary least squares (OLS) with a change of basis characterized by $U$. In order to implement the GLS we first compute the Cholesky decomposition of $\Sigma$ in order to have P. Then, taking the inverse of the transpose of P, we get U which is used to change $X$ in $UX$ and $Y$ in $UY$. Finally, we use the Cholesky decomposition of $X$ in order to solve the OLS efficiently, like in the previous problem.\\ 
+Even more efficiently, we can use the $backsolve$ function of R in order to get $UX$ and $UY$ directly from P.
+<<>>=
+n=100
+p=10
+y=matrix(runif(n),nrow=n,ncol=1)
+X0=matrix(runif(n*n),n,n)
+S=(X0+t(X0))/n+diag(n)
+X0=matrix(runif(n*n),n,n)
+X=(X0+t(X0))/n+diag(n)
+
+gls = function(X,Y,S){
+  # X is a nxp matrix
+  # Y is a vector of length n
+  # S is a covariance matrix
+  P=chol(S)
+  Xbis=backsolve(P,X,transpose = TRUE)
+  Ybis=backsolve(P,Y,transpose = TRUE)
+  V=chol(tcrossprod(Xbis,Xbis))
+  backsolve(Xbis, backsolve(Xbis, crossprod(Xbis,Ybis), transpose = TRUE))
+  
+}
+head(gls(X,y,S))
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{}
+Let $v \in \mathbbm{R^{p}} $ be a right singular vector of $X \in \mathbbm{M}_{n,p}(\mathbbm{R})$ and $\lambda \in \mathbbm{R}$ be the associated singular value.\\
+$\exists u \in \mathbbm{R^{n}}$ such that:
+\begin{equation}
+Xv=\lambda u
+\end{equation}
+\begin{equation}
+X^{T}u= \lambda v
+\end{equation}
+Then:
+\begin{equation}
+X^{T}Xv=X^{T}(\lambda u)=\lambda X^{T}u={\lambda}^{2}v
+\end{equation}
+Which proves that $v$ is an eigen vector of $X^{T}X$ associated with the eigenvalue $\lambda$ and associated eigenvalue is ${\lambda}^{2}$. There exists $p$ distinct singular values for $X$, so we have found $p$ distinct eigen values of $X^{T}X$. Therefore, reciprocally every eigenvalue of $X^{T}X$ can be expressed as the square of one right singular value of $X$.
+\subsection{}
+Let $X \in \mathbbm{M}_{n,p}(\mathbbm{R})$ and note $M$ the product $X^{T}X$. $M$ is clearly symmetric and belongs to $\mathbbm{M}_{p}(\mathbbm{R})$. Therefore let's note $(v_{i})_{1\leq i\leq p}$ its eigen vectors respectively associated with the eigenvalues $({\sigma}_{i})_{1\leq i\leq p}$. From before we have the existence of 
+$({\lambda}_{i})_{1\leq i\leq p}$ such that $\forall i,{\lambda}_{i}^{2} = {\sigma}_{i} $.
+\begin{equation}
+\forall x \in \mathbbm{R^{p}, \exists ({\sigma}_{i})_{1\leq i\leq p} } \hspace{.5cm}\mbox{ such that }\hspace{.5cm} x=\sum_{i=0}^{p}{\alpha}_{i}v_{i}
+\end{equation}
+Then using the orthogonality of the eigen vectors of M we have $\forall x \in \mathbbm{R^{p}}$:
+\begin{align}
+x^{T}Mx&=(\sum_{i=0}^{p}{\alpha}_{i}v_{i})^{T}M(\sum_{i=0}^{p}{\alpha}_{i}v_{i}) \nonumber\\
+&=(\sum_{i=0}^{p}{\alpha}_{i}v_{i})^{T}(\sum_{i=0}^{p}{\alpha}_{i}{\lambda}_{i}^{2}v_{i})
+\nonumber\\
+&=\sum_{i=0}^{p}{\alpha}_{i}^{2}{\lambda}_{i}^{2}{||v_{i}||}^{2} \geq 0
+\end{align}
+Therefore M is a symmetric positive matrix.
+\subsection{}
+Equivalently:
+\begin{align}
+Xv=\lambda v  &\iff Zv=\lambda v+ cv \nonumber\\
+&\iff Zv=(\lambda + c)v
+\end{align}
+Therefore the eigenvalues of $Z$ are $\{{\lambda+c | \lambda \in \mathbbm{ S}_{p}(\mathbbm{R})}\}$. In order to compute these eigenvalues we can add $c$ to every eigenvalue of $X$. The complexity here is exactly $n$ additions.
+
+
+
+
+\end{document}
+
+
+
+
+
